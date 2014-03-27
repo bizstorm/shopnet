@@ -1,0 +1,128 @@
+		<!--header start-->
+		<header class="header white-bg">
+			<!--logo start-->
+			<a href="#" class="logo">
+				<img src ='img/logotrybeta.png' style =" height: 50px;" />
+			</a>
+			
+			<!--logo end-->
+
+			<div class="top-nav ">
+				<!--search & user info start-->
+				<ul class="nav pull-right top-menu">
+
+					<li class="dropdown" ng-show="showSearch"><a 
+						 
+						style="width: 35px; text-align: center;"> <i
+							class="icon-search icon-large"></i>
+
+					</a></li>
+
+<!--  					<li class="dropdown" ng-show="showFilters"><a data-toggle="dropdown"
+						class="dropdown-toggle" href="#"
+						style="width: 35px; text-align: center;"> <i
+							class="icon-eye-open icon-large"></i>
+
+					</a>
+						<ul class="dropdown-menu extended tasks-bar">
+							<div class="notify-arrow notify-arrow-green"></div>
+							<li>
+								<p class="green">Welcome Guest</p>
+							</li>
+							<li><a href="#">
+
+									<div class="desc">Mixed View</div>
+
+
+							</a></li>
+							<li class="external"><a href="#">Map View</a></li>
+
+							<li class="external"><a href="#">List View</a></li>
+						</ul></li>
+
+-->
+					<li class="dropdown" ng-show="showFilters" id ="searchFiltersIcon" style ="display:none;cursor:pointer;" ng-click ="toggleFilter()" >
+					<a style="width: 35px; text-align: center; background-color:#41cac0;"> 
+					<i class="icon-filter icon-large"></i>
+					</a></li>
+
+
+					<li class="dropdown" ng-show="showUserActions" ><a data-toggle="dropdown"
+						class="dropdown-toggle" href="#"
+						style="width: 35px; text-align: center;"> <i
+							class="icon-list icon-large"></i>
+
+					</a>
+						<ul class="dropdown-menu extended tasks-bar">
+							<div class="notify-arrow notify-arrow-green"></div>
+							<li>
+								<p class="green">Welcome Guest</p>
+							</li>
+							<li><a href="#">
+									<div class="task-info">
+										<div class="desc">Suggest Offers</div>
+									</div>
+
+							</a></li>
+
+
+
+
+
+							<li class="external"><a href="#">Invite Friends</a></li>
+						</ul></li>
+					
+					<!-- user login dropdown start-->
+					
+					<!--  
+					<li class="dropdown">
+					
+					<a data-toggle="dropdown" ng-show="showSignIn"
+						class="dropdown-toggle" href="#"
+						style="width: 35px; text-align: center;"> <i
+							class="icon-user icon-large"></i>
+
+					</a>
+						<ul class="dropdown-menu extended logout">
+							<div class="log-arrow-up"></div>
+							
+							<a href="#" onclick="csSignInGoogle();return false;" id="signInGoogleId" 
+							class="googlePlusSignupButton">Sign up with Google</a>
+							
+						</ul>
+						
+						
+						</li>
+					<!-- user login dropdown end -->
+					<li>
+					<button ng-hide = "MapUtilsSvc.loggedIn" ng-really-click="csSignInGoogle()" id="signInGoogleId"  ng-really-message="By signing up for Scantheshops.com you agree to the Terms of Service and Privacy Policy."
+							class="googlePlusSignupButton" >{{login_text}}</button>	
+					</li>		
+					<li ng-show = "MapUtilsSvc.loggedIn">
+					 <button class='btn' ng-click="csShareInFB()" >Share with Friends</button>
+    				</li>
+				    <li ng-show = "MapUtilsSvc.loggedIn">
+					 <button class='btn' ng-click="csInviteInFB()" >Invite Friends</button>
+    				</li>
+                  <li>
+			<li class="dropdown" ng-show = "MapUtilsSvc.loggedIn">
+                      <a data-toggle="dropdown" class="dropdown-toggle" style="background-color:#41cac0;" href="#">
+                          <image alt="" data-ng-src="{{MapUtilsSvc.loggedInUser.pictureLogin}}" height="30px">
+                          <!--<span class="username">{{userName}}</span>-->
+						  <span class="username" data-ng-bind="MapUtilsSvc.loggedInUser.name">{{MapUtilsSvc.loggedInUser.name}}</span>
+                          <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu extended logout">
+                          
+                          <li><a  ng-click="csSignInGoogle()" style ="padding: 10px !important;cursor:pointer;" >{{login_text}}</a></li>
+                      </ul>
+                  </li>							
+							
+							
+							
+				</ul>
+				<!--search & user info end-->
+			</div>
+		</header>
+
+		<!--header end-->

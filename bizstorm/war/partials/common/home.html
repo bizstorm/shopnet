@@ -1,0 +1,99 @@
+<div id="bg-overlay"></div>
+<section id="main-content2" class="home_content">
+	<section class="wrapper">
+		<div class="container">
+			<form class="form-signin" action="index.html" style="-webkit-box-shadow: -7px 7px 5px 0px rgba(50, 50, 50, 0.25);-moz-box-shadow:    -7px 7px 5px 0px rgba(50, 50, 50, 0.25);box-shadow:         -7px 7px 5px 0px rgba(50, 50, 50, 0.25); -webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;">
+				<h2 class="form-signin-heading">Scan The Shops</h2>
+				<div class="login-wrap">
+					<p style="text-align:center;">ScanTheShops is a local search engine to find great deals in
+						your area.<div class="visible-lg visible-md hidden-sm hidden-xs text-center"> You can find great nearby deals on your mobile phones,
+						tablets, books or dry cleaning, plumbing services or restaurant
+						deals which will surprise you and which you were unaware of till
+						now.</div></p>
+					<input type="text" class="form-control m-bot15"
+						data-ng-model="MapUtilsSvc.interest" x-webkit-speech ng-enter="MapUtilsSvc.goTo('/results/')"
+						placeholder="I Am Looking For...." typeahead="state for state in MapUtilsSvc.optionsCat | filter:$viewValue | limitTo:10" placeholder="Near"  autofocus>
+					<div class="input-group m-bot15">
+					
+					
+					
+						<input type="text" class="form-control " id="pac-input" ng-enter="MapUtilsSvc.goTo('/results/')"
+							data-ng-model="MapUtilsSvc.searchAddress">
+							
+							
+						<span class="input-group-addon boxShadow" class="btn btn-default" tooltip-append-to-body="true" ng-click="processLocationFind()" tooltip="Locate Me" tooltip-placement="top"
+							tooltip-trigger="mouseenter"><span
+							class="glyphicon glyphicon-pushpin"
+							></span></span>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4 col-md-offset-8">
+							<a href='#results/' class="btn btn-lg btn-login btn-block">Scan</a>
+
+						</div>
+					</div>
+					<p style="font-size: 16px; font-weight: bold; color:#5d82ff;">Quick Search</p>
+
+					<div class="row">
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<A href='#results/categorySelected/Mobiles & Tablets' class="collinks">Mobiles & Tablets</A>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Books' class="collinks">Books</a>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Electronics' class="collinks">Electronics</a>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Bags' class="collinks">Bags</a>
+						</div>
+
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Home & Lifestyle' class="collinks">Home & Lifestyle</a>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Clothing' class="collinks">Clothing</a>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Gift Items' class="collinks">Gift Items</a>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Sports' class="collinks">Sports</a>
+						</div>
+
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Beauty & Health' class="collinks">Beauty & Health</a>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Grocery' class="collinks">Grocery</a>
+						</div>
+						
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Furniture' class="collinks">Furniture</a>
+						</div>
+						<div class="col-md-3 col-lg-3 col-sm-3 col-xs-6 incen1">
+							<a href='#results/categorySelected/Pharmacy' class="collinks">Pharmacy</a>
+						</div>
+
+					</div>
+
+				</div>
+
+			</form>
+
+		</div>
+	</section>
+</section>
+<!--main content end-->
+<div class="col-lg-9" id="gmap"></div>
