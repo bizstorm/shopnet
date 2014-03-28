@@ -14,7 +14,7 @@ import com.google.appengine.api.search.GeoPoint;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.SearchServiceFactory;
-import com.jmd.shopnet.entity.Retailer;
+import com.jmd.shopnet.entity.Business;
 
 public class RetailerIndexer {
 	protected Logger log = Logger.getLogger(RetailerIndexer.class.getName());
@@ -25,7 +25,7 @@ public class RetailerIndexer {
 	public static final String RETAILER_NAME = "name";
 	public static final String RETAILER_DETAIL = "detail";
 	public static final String RETAILER_CATEGORIES = "cat";
-	public static final String RETAILER_SUBCATEGORIES = "subcat";
+	public static final String RETAILER_BUSINESSTYPE = "bizType";
 	public static final String RETAILER_BRANDS = "brand";
 	public static final String RETAILER_WEBSITE = "site";
 
@@ -38,9 +38,9 @@ public class RetailerIndexer {
 	 * Pushing collection in single async call
 	 * More efficient
 	 */
-	public boolean pushToIndex(Collection<Retailer> retailers) {
+	public boolean pushToIndex(Collection<Business> retailers) {
 		List<Document> docs = new ArrayList<Document>();
-		for (Retailer retailer : retailers) {
+		for (Business retailer : retailers) {
 			Document doc = builder(retailer).build();
 			log.info("Retailers search doc to add:\n" + doc);
 			docs.add(doc);
@@ -48,7 +48,7 @@ public class RetailerIndexer {
 		RETAILER_INDEX.putAsync(docs);
 		return true;
 	}
-	public String pushToIndex(Retailer retailer) {
+	public String pushToIndex(Business retailer) {
 		Document doc = builder(retailer).build();
 		log.info("Retailer search doc to add:\n" + doc);
 		try {
@@ -60,7 +60,7 @@ public class RetailerIndexer {
 			return "Docs not added to seach due to an error: " + e.getMessage();
 		}
 	}
-	public void deleteFromIndex(Retailer retailer) {
+	public void deleteFromIndex(Business retailer) {
 		log.info("Retailer to delete:\n" + retailer);
 		try {
 			RETAILER_INDEX.deleteAsync(retailer.getId().toString());
@@ -68,10 +68,10 @@ public class RetailerIndexer {
 			log.log(Level.SEVERE, "Failed to delete " + retailer, e);
 		}
 	}
-	public void deleteFromIndex(List<Retailer> retailers) {
+	public void deleteFromIndex(List<Business> retailers) {
 		log.info("Retailers sise to delete:\n" + retailers.size());
 		List<String> documentIds = new ArrayList<>(retailers.size());
-		for (Retailer retailer : retailers) {
+		for (Business retailer : retailers) {
 			documentIds.add(retailer.getId().toString());
 		}
 		try {
@@ -97,7 +97,7 @@ public class RetailerIndexer {
 		return pushToIndex(Arrays.asList(retailers));
 	}*/
 
-	protected Builder builder(Retailer retailer) {
+	protected Builder builder(Business retailer) {
 		Builder docBuilder = Document.newBuilder().setId(retailer.getId().toString())
 				.addField(Field.newBuilder().setName(RETAILER_NAME).setText(retailer.getName()))
 				.addField(Field.newBuilder().setName(RETAILER_DETAIL).setText(retailer.getDetails()))
@@ -107,10 +107,9 @@ public class RetailerIndexer {
 			for (Category c : retailer.getCategories()) {
 				docBuilder.addField(Field.newBuilder().setName(RETAILER_CATEGORIES).setAtom(c.getCategory()));
 			}
-		if(retailer.getSubCategories() != null && !retailer.getSubCategories().isEmpty())
-			for (Category s : retailer.getSubCategories()) {
-				docBuilder.addField(Field.newBuilder().setName(RETAILER_SUBCATEGORIES).setAtom(s.getCategory()));
-			}
+		if(retailer.getBusinessType() != null ) {
+				docBuilder.addField(Field.newBuilder().setName(RETAILER_BUSINESSTYPE).setAtom(retailer.getBusinessType().getCategory()));
+		}
 		if(retailer.getBrands() != null && !retailer.getBrands().isEmpty())
 			for (Category b : retailer.getBrands()) {
 				docBuilder.addField(Field.newBuilder().setName(RETAILER_BRANDS).setAtom(b.getCategory()));

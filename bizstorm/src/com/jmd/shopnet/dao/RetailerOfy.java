@@ -8,63 +8,63 @@ import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.Category;
 import com.googlecode.objectify.Key;
-import com.jmd.shopnet.entity.Retailer;
+import com.jmd.shopnet.entity.Business;
 
 public class RetailerOfy {
 	protected Logger log = Logger.getLogger(RetailerOfy.class.getName());
-	public Key<Retailer> saveEntity(Retailer retailer) {
+	public Key<Business> saveEntity(Business retailer) {
 	    return ofy().save().entity(retailer).now();
 	}
-	public Map<Key<Retailer>, Retailer> saveEntitiesNow(List<Retailer> retailers) {
+	public Map<Key<Business>, Business> saveEntitiesNow(List<Business> retailers) {
 	    return ofy().save().entities(retailers).now();
 	}
-	public void saveEntityAsync(Retailer retailer) {
+	public void saveEntityAsync(Business retailer) {
 	    ofy().save().entity(retailer);
 	}
-	public void saveEntitiesAsync(List<Retailer> retailers) {
+	public void saveEntitiesAsync(List<Business> retailers) {
 	    ofy().save().entities(retailers);
 	}
-	public List<Retailer> fetchRetailers(Integer limit) {
+	public List<Business> fetchRetailers(Integer limit) {
 		// User user = UserServiceFactory.getUserService().getCurrentUser();
-		List<Retailer> retailers = ofy().load().type(Retailer.class)
+		List<Business> retailers = ofy().load().type(Business.class)
 				.limit(limit).list();// TODO geospatial query on search API
 		return retailers;
 	}
-	public Retailer fetchRetailer(Long id) {
-		Retailer retailer = ofy().load().type(Retailer.class).id(id).now();
+	public Business fetchRetailer(Long id) {
+		Business retailer = ofy().load().type(Business.class).id(id).now();
 		return retailer;
 	}
-	public Retailer fetchRetailerSafe(Long id) {
-		Retailer retailer = ofy().load().type(Retailer.class).id(id).safe();
+	public Business fetchRetailerSafe(Long id) {
+		Business retailer = ofy().load().type(Business.class).id(id).safe();
 		return retailer;
 	}
-	public List<Retailer> fetchBySmsNumbers(String smsNumber) {
-	    return ofy().load().type(Retailer.class).filter("smsNumbers", smsNumber).list();
+	public List<Business> fetchBySmsNumbers(String smsNumber) {
+	    return ofy().load().type(Business.class).filter("smsNumbers", smsNumber).list();
 	}
-	public List<Retailer> fetchByPhoneNumbers(String smsNumber) {
-	    return ofy().load().type(Retailer.class).filter("phoneNumbers", smsNumber).list();
+	public List<Business> fetchByPhoneNumbers(String smsNumber) {
+	    return ofy().load().type(Business.class).filter("phoneNumbers", smsNumber).list();
 	}
-	public List<Retailer> fetchByCategory(Category category) {
-	    return ofy().load().type(Retailer.class).filter("categories", category).list();
+	public List<Business> fetchByCategory(Category category) {
+	    return ofy().load().type(Business.class).filter("categories", category).list();
 	}
-	public List<Retailer> fetchByCategories(List<Category> categories) {
-	    return ofy().load().type(Retailer.class).filter("categories in: ", categories).list();
+	public List<Business> fetchByCategories(List<Category> categories) {
+	    return ofy().load().type(Business.class).filter("categories in: ", categories).list();
 	}
-	public List<Retailer> fetchByUserEmail(String addedByEmail) {
-	    return ofy().load().type(Retailer.class).filter("addedByEmail", addedByEmail).list();
+	public List<Business> fetchByUserEmail(String addedByEmail) {
+	    return ofy().load().type(Business.class).filter("addedByEmail", addedByEmail).list();
 	}
-	public void deleteEntity(Retailer retailer) {
+	public void deleteEntity(Business retailer) {
 	    ofy().delete().entity(retailer).now();
 	}
 	public void deleteEntity(Long id) {
-	    ofy().delete().type(Retailer.class).id(id).now();
+	    ofy().delete().type(Business.class).id(id).now();
 	}
-	public void deleteEntities(List<Retailer> retailers) {
+	public void deleteEntities(List<Business> retailers) {
 	    log.info("Deleting retailers: " + retailers.size());
 	    ofy().delete().entities(retailers);
 	}
-	public List<Retailer> deleteEntities(Integer limit) {
-	    List<Retailer> retailersToDelete = fetchRetailers(limit);
+	public List<Business> deleteEntities(Integer limit) {
+	    List<Business> retailersToDelete = fetchRetailers(limit);
 	    log.info("Deleting all retailers: " + retailersToDelete.size());
 		ofy().delete().entities(retailersToDelete);
 		return retailersToDelete;

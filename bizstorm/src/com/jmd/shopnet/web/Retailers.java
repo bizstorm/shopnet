@@ -12,7 +12,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
-import com.jmd.shopnet.entity.Retailer;
+import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.search.RetailerIndexer;
 import com.jmd.shopnet.search.RetailerSearch;
 
@@ -27,7 +27,7 @@ public class Retailers
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Retailer> getRetailers(
+	public List<Business> getRetailers(
 			@QueryParam("lat") Double lat,
 			@QueryParam("lng") Double lng,
 			@QueryParam("radius") Float radius,
@@ -39,13 +39,13 @@ public class Retailers
 			limit = RetailerIndexer.DEFAULT_LIMIT;
 		if(radius == null)
 			radius = RetailerIndexer.DEFAULT_RADIUS;
-		List<Retailer> retailers;
+		List<Business> retailers;
 		try {
 			retailers = retailerSearch.searchRetailers(lat, lng, radius, null, null, limit, null);
 			return retailers;
 		} catch (Exception e) {
 			log.logp(Level.SEVERE, Retailers.class.getName(), "getRetailers", "Shop search failed. " + e.getMessage(), e);
-			return Collections.<Retailer>emptyList();
+			return Collections.<Business>emptyList();
 		}
 	}
 

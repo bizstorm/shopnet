@@ -30,8 +30,7 @@ import com.jmd.shopnet.dao.RetailerOfy;
 import com.jmd.shopnet.entity.Bookmark;
 import com.jmd.shopnet.entity.Country;
 import com.jmd.shopnet.entity.Customer;
-import com.jmd.shopnet.entity.Friend;
-import com.jmd.shopnet.entity.Retailer;
+import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.search.RetailerIndexer;
 import com.jmd.shopnet.search.RetailerSearch;
 import com.jmd.shopnet.utils.Ids;
@@ -64,7 +63,7 @@ public class SellerAPI {
 
 
 	@ApiMethod(name="search.shops", httpMethod = "POST")
-	public List<Retailer> searchRetailers(
+	public List<Business> searchRetailers(
 			@Named("latitude") double lat//Not float - to handle JS 64-bit numbers
 			,@Named("longitude") double lng
 			,@Nullable @Named("radius") Float radius
@@ -111,10 +110,10 @@ public class SellerAPI {
 	 */
 	@ApiMethod(name="admin.retailer.save", path="admin_retailer_save")
 	public void insertRetailer(
-		Retailer retailer
+		Business retailer
 		,User user
 		) throws OAuthRequestException, IOException {
-		Key<Retailer> key = this.retailerOfy.saveEntity(retailer);
+		Key<Business> key = this.retailerOfy.saveEntity(retailer);
 		if(log.isLoggable(Level.FINE))
 			log.fine("Added Retailer with key: " + key);
 	}
@@ -141,7 +140,7 @@ public class SellerAPI {
 	 * persisted and a cursor to the next page.
 	 */
 	@ApiMethod(name="admin.retailers.list")
-	public List<Retailer> listRetailer(
+	public List<Business> listRetailer(
 			@Nullable @Named("cursor") String cursorString,
 			@Nullable @Named("limit") Integer limit
 			) {
@@ -162,7 +161,7 @@ public class SellerAPI {
 	}
 	@ApiMethod(name="admin.retailers.removeK")//TODO delete method before going live
 	public void removeRetailersK() {
-		List<Retailer> retailers = this.retailerOfy.deleteEntities(1000);
+		List<Business> retailers = this.retailerOfy.deleteEntities(1000);
 		this.retailerIndexer.deleteFromIndex(retailers);
 	}
 
@@ -490,37 +489,11 @@ public class SellerAPI {
 			log.fine("Added Customer with key: " + key);
 	}
 	
-	@ApiMethod(name="user.customer.update", path="user_customer_update")
-	public Customer updateCustomer(
-			Customer customer			
-			,User user
-			) throws OAuthRequestException, IOException {
 		
-		if(customer != null && customer.getFbId() != null && customer.getFbId() != ""){			
-			List<Friend> friends = customer.getFriends();
-			log.info("Updating customer customer : "+customer.getEmail()+", friends : "+ friends.size());
-			for (Friend friend : friends) {
-				if(friends != null){
-					List<Customer> existingCustomer = this.customerOfy.fetchByFbId(friend.getFbId());
-					if(existingCustomer != null && existingCustomer.size() > 0){
-						friend.setEmail(existingCustomer.get(0).getEmail());
-					}
-				}
-				
-			}
-			Key<Customer> key = this.customerOfy.saveEntity(customer);
-			if(key != null) {
-				customer.setId(key.getId());
-			}
-		}	
-		return customer;
-	}
-
-	
 
 	
 	@ApiMethod(name="user.retailer.createByProps", path="user_retailer_createByProps")
-	public Retailer createRetailer(
+	public Business createRetailer(
 			@Named("name") String name
 			, @Named("latitude") double lat
 			, @Named("longitude") double lng
@@ -551,17 +524,12 @@ public class SellerAPI {
 //			log.severe("user.retailer.createByProps: User not present: ");
 //			return null;
 //		}
-		Retailer r = new Retailer();
-		r.setCrowdSourced(true);
+		Business r = new Business();
 		r.setName(name);
 		r.setLatLng((float)lat, (float)lng);
 		r.setDetails(details);
-		r.setPhoneCsv(phoneCsv);
-		r.setEmailCsv(emailCsv);
-		r.setAddress(address);
-		r.setLocality(locality);
+	
 		r.setCategoryTags(categoryCsv);
-		r.setSubCategoryTags(subCategoryCsv);
 		r.setBrandTags(brandCsv);
 		//r.setCity(City.valueOf(city));
 		r.setContactName(contactName);
@@ -573,10 +541,8 @@ public class SellerAPI {
 		//r.setRating(rating);
 		r.setSmsCsv(smsNumberCsv);
 		r.setWebsiteUrl(website);
-		r.setZip(zip);
-		r.setAddedByEmail(user.getEmail());
 		log.info("creating retailer: " + r);
-		Key<Retailer> key = this.retailerOfy.saveEntity(r);//TODO Handle Exception
+		Key<Business> key = this.retailerOfy.saveEntity(r);//TODO Handle Exception
 		if(key != null) {
 			r.setId(key.getId());
 			String status = retailerIndexer.pushToIndex(r);//TODO Handle Exception
@@ -590,7 +556,7 @@ public class SellerAPI {
 
 
 	@ApiMethod(name="user.retailer.setProps", path="user_retailer_setProps")
-	public Retailer setRetailer(
+	public Business setRetailer(
 			  @Named("id") Long id
 			, @Nullable @Named("name") String name
 			, @Nullable @Named("latitude") double lat
@@ -617,7 +583,7 @@ public class SellerAPI {
 			,User user
 			) throws OAuthRequestException, IOException{
 
-		Retailer r = this.retailerOfy.fetchRetailer(id);
+		Business r = this.retailerOfy.fetchRetailer(id);
 
 		if(null != name)
 			r.setName(name);
@@ -627,26 +593,9 @@ public class SellerAPI {
 			r.setDetails(details);
 		if(null != categoryCsv)
 			r.setCategoryTags(categoryCsv);
-		if(null != subCategoryCsv)
-			r.setSubCategoryTags(subCategoryCsv);
-		if(null != brandCsv)
-			r.setBrandTags(brandCsv);
-		if(null != phoneCsv)
-			r.setPhoneCsv(phoneCsv);
-		if(null != smsNumberCsv)
-			r.setSmsCsv(smsNumberCsv);
-		if(null != emailCsv)
-			r.setEmailCsv(emailCsv);
-		if(null != website)
-			r.setWebsiteUrl(website);
-		if(null != address)
-			r.setAddress(address);
-		if(null != locality)
-			r.setLocality(locality);
 		
-		//r.setCity(City.valueOf(city));
-		if(null != zip)
-			r.setZip(zip);
+		
+	
 		if(null != contactName)
 			r.setContactName(contactName);
 		if(null != contactPhoneCsv)
@@ -662,7 +611,7 @@ public class SellerAPI {
 		
 		
 		log.info("setting retailer: " + r);
-		Key<Retailer> key = this.retailerOfy.saveEntity(r);//TODO Handle Exception
+		Key<Business> key = this.retailerOfy.saveEntity(r);//TODO Handle Exception
 		if(key != null) {
 			return r;
 		} else {
@@ -678,7 +627,7 @@ public class SellerAPI {
 	 * @return The entity with primary key id.
 	 */
 	@ApiMethod(name="user.retailer.fetch", path="user_retailer_fetch")
-	public Retailer fetchRetailer(
+	public Business fetchRetailer(
 		@Named("id") Long id
 		,User user
 		) throws OAuthRequestException, IOException {
@@ -686,12 +635,12 @@ public class SellerAPI {
 	}
 
 	@ApiMethod(name="user.retailer.fetchByUser", path="user_retailer_fetchByUser")
-	public List<Retailer> fetchRetailerByUser(
+	public List<Business> fetchRetailerByUser(
 		User user
 		) throws OAuthRequestException, IOException {
 		if(null == user)
 		{
-			return new java.util.LinkedList<Retailer>();
+			return new java.util.LinkedList<Business>();
 		}
 		else
 		{
@@ -710,10 +659,10 @@ public class SellerAPI {
 	 */
 	@ApiMethod(name="user.retailer.save", path="user_retailer_save")
 	public void insertRetailerCustomer(
-		Retailer retailer
+		Business retailer
 		, User user
 		) throws OAuthRequestException, IOException{
-		Key<Retailer> key = this.retailerOfy.saveEntity(retailer);
+		Key<Business> key = this.retailerOfy.saveEntity(retailer);
 		if(log.isLoggable(Level.FINE))
 			log.fine("Added Retailer with key: " + key);
 	}
@@ -735,7 +684,7 @@ public class SellerAPI {
 		}
 
 		Bookmark b = new Bookmark();
-		Key<Retailer> retailerKey = Key.create(Retailer.class, retailerId);
+		Key<Business> retailerKey = Key.create(Business.class, retailerId);
 		List<Customer> custList = this.customerOfy.fetchByEmail(user.getEmail());
 		b.setCustomer(custList.get(0));
 		
@@ -770,7 +719,7 @@ public class SellerAPI {
 
 	
 	@ApiMethod(name = "user.retailer.match")
-	public List<Retailer> getMatchingRetailersByName(
+	public List<Business> getMatchingRetailersByName(
 			@Named("lat") double lat
 			, @Named("lng") double lng
 			, @Nullable @Named("name") String name
@@ -779,7 +728,7 @@ public class SellerAPI {
 	}
 
 	@ApiMethod(name="admin.retailer.createByProps")
-	public Retailer createApprovedRetailer(
+	public Business createApprovedRetailer(
 			@Named("name") String name
 			, @Named("latitude") double lat
 			, @Named("longitude") double lng
@@ -819,17 +768,11 @@ public class SellerAPI {
 //			return null;
 		}
 
-		Retailer r = new Retailer();
+		Business r = new Business();
 		r.setName(name);
 		r.setLatLng((float)lat, (float)lng);
-		r.setAddedByEmail(agentId);
-		r.setDetails(details);
-		r.setPhoneCsv(phoneCsv);
-		r.setEmailCsv(emailCsv);
-		r.setAddress(address);
-		r.setLocality(locality);
+		
 		r.setCategoryTags(categoryCsv);
-		r.setSubCategoryTags(subCategoryCsv);
 		r.setBrandTags(brandCsv);
 		r.setContactName(contactName);
 		r.setContactPhoneCsv(contactPhoneCsv);
@@ -837,9 +780,7 @@ public class SellerAPI {
 		r.setPaymentModeCsv(paymentModeCsv);
 		r.setProductTags(productCsv);
 		r.setServiceTypeTags(serviceTypeCsv);
-		r.setRetailerPicturesCsv(pictureUrlCsv);
-		r.setPartner(isPartner);
-		r.setCrowdSourced(false);
+		
 		r.setApproved(true);
 		try {
 			r.setCountry(Country.valueOf(country));
@@ -853,19 +794,15 @@ public class SellerAPI {
 			r.setEditorRating(rating.floatValue());
 		r.setSmsCsv(smsNumberCsv);
 		r.setWebsiteUrl(website);
-		r.setZip(zip);
+		
 		r.setAddedBy(user);
-		if(user != null) {
-			r.setAddedByEmail(user.getEmail());
-		} else {
-			r.setAddedByEmail("sales@locoserv.in");//TODO remove this and throw access error after login integration
-		}
+		
 		
 		//r.setDaysOfWeek(daysOfWeek);//TODO provide half days
 		//r.setTimeOpen(timeOpen);
 		//r.setTimeClose(timeClose);
 		log.info("creating retailer: " + r);
-		Key<Retailer> key = this.retailerOfy.saveEntity(r);//TODO Handle Exception
+		Key<Business> key = this.retailerOfy.saveEntity(r);//TODO Handle Exception
 		if(key != null) {
 			log.info("created retailer ID: " + key.getId());
 			r.setId(key.getId());

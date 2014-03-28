@@ -9,12 +9,10 @@ import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.googlecode.objectify.Key;
-import com.jmd.shopnet.entity.Country;
-import com.jmd.shopnet.entity.PartnerAction;
-import com.jmd.shopnet.entity.Retailer;
-import com.jmd.shopnet.entity.SmsRequest;
 import com.jmd.shopnet.dao.RetailerOfy;
+import com.jmd.shopnet.entity.Business;
+import com.jmd.shopnet.entity.Country;
+import com.jmd.shopnet.entity.SmsRequest;
 import com.jmd.shopnet.utils.StringConversions;
 import com.jmd.shopnet.web.SmscRecieverServlet;
 
@@ -105,7 +103,7 @@ public class SmscProcessor {
 		String title = null;
 		int returnCode = 0;
 
-		List<Retailer> retailers = null;
+		List<Business> retailers = null;
 		try {
 			retailers = findRetailersBySmsNumber(sms.getSmsNumber());
 		} catch (RuntimeException e) {
@@ -131,7 +129,6 @@ public class SmscProcessor {
 			
 			String act = tokens.nextToken();
 			if(act.equalsIgnoreCase("event") || act.equalsIgnoreCase("evt")) {//TODO handle default on no start word
-				sms.setAction(PartnerAction.EVENT_ADD);
 				if(!tokens.hasMoreTokens()) {
 					log.severe("No Start date to add event.");
 					errorMesgShort = "no Start date";
@@ -156,7 +153,7 @@ public class SmscProcessor {
 								Date startDate = StringConversions.parseDateAllFormats(startDateStr);
 								Date endDate = StringConversions.parseDateAllFormats(endDateStr);
 								title = message.substring(message.indexOf(endDateStr) + endDateStr.length() + 1);//TODO handle same start end dates
-								for (Retailer retailer : retailers) {
+								for (Business retailer : retailers) {
 									
 								}
 								
@@ -197,10 +194,10 @@ public class SmscProcessor {
 		return returnCode;
 	}
 
-	private List<Retailer> findRetailersBySmsNumber(String smsNumber) {
+	private List<Business> findRetailersBySmsNumber(String smsNumber) {
 		if(smsNumber == null || smsNumber.isEmpty())
 			return null;
-		List<Retailer> retailers = retailerOfy.fetchBySmsNumbers(smsNumber);
+		List<Business> retailers = retailerOfy.fetchBySmsNumbers(smsNumber);
 		if(retailers == null || retailers.isEmpty()) {
 			retailers = retailerOfy.fetchByPhoneNumbers(smsNumber);
 			if(retailers == null || retailers.isEmpty()) {

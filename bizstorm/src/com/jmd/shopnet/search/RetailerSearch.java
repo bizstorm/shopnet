@@ -16,7 +16,7 @@ import com.google.appengine.api.search.SortOptions;
 import com.google.appengine.api.search.SortOptions.Builder;
 import com.google.inject.Inject;
 import com.googlecode.objectify.NotFoundException;
-import com.jmd.shopnet.entity.Retailer;
+import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.dao.RetailerOfy;
 
 public class RetailerSearch {
@@ -25,7 +25,7 @@ public class RetailerSearch {
 	Logger log = Logger.getLogger(RetailerSearch.class.getName());
 	private RetailerOfy retailerOfy;
 
-	public List<Retailer> searchRetailers(double lat, double lng, Float radius, List<Category> categories, String sortKey, Integer limit, Integer offset) {
+	public List<Business> searchRetailers(double lat, double lng, Float radius, List<Category> categories, String sortKey, Integer limit, Integer offset) {
 		if (log.isLoggable(Level.FINE))
 			log.fine("called searchRetailers with lat: " + lat  + " lng: " + lng
 				+ " radius: " + radius + " categories: " + categories
@@ -49,12 +49,12 @@ public class RetailerSearch {
 		if (log.isLoggable(Level.FINE))
 			log.fine("Search results size: " + results.size());
 		if (results != null && results.size() > 0) {
-			List<Retailer> retailers = new ArrayList<Retailer>();
+			List<Business> retailers = new ArrayList<Business>();
 			for (ScoredDocument sd : results) {
 				if (log.isLoggable(Level.FINER))
 					log.finer("Search result ID: " + sd.getId());
 				try {
-					Retailer r = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
+					Business r = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
 					retailers.add(r);
 				} catch (NotFoundException e) {
 					log.logp(Level.WARNING, RetailerSearch.class.getName(), "searchRetailers", "Bad retailer ID from search results. Ignoring. ", e);
@@ -75,7 +75,7 @@ public class RetailerSearch {
 		return Collections.emptyList();
 	}
 
-	public Retailer getExactDuplicate(Retailer r) {
+	public Business getExactDuplicate(Business r) {
 		Collection<ScoredDocument> results = getMatchingRetailerDocs(r.getLat(), r.getLng(), r.getName(), DUPLICATE_CHECK_LIMIT);
 		if (log.isLoggable(Level.FINE))
 			log.fine("Search results size: " + results.size());
@@ -84,12 +84,12 @@ public class RetailerSearch {
 				if (log.isLoggable(Level.FINER))
 					log.finer("Duplicate Search result ID: " + sd.getId());
 				try {
-					Retailer d = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
-					if(d.getName().equalsIgnoreCase(r.getName())
-							&& d.getAddress().equalsIgnoreCase(r.getAddress())
+					Business d = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
+					/*if(d.getName().equalsIgnoreCase(r.getName())
+							&& d.getPostalAddress().equalsIgnoreCase(r.getPostalAddress())
 							) {
 						return d;
-					}
+					}*/
 						
 				} catch (NotFoundException e) {
 					log.logp(Level.WARNING, RetailerSearch.class.getName(), "searchRetailers", "Bad retailer ID from search results. Ignoring. ", e);
@@ -102,19 +102,19 @@ public class RetailerSearch {
 	/**
 	 * @return null for no matching results
 	 */
-	public List<Retailer> getMatchingRetailersByName(double lat, double lng, String name, Integer limit) {
+	public List<Business> getMatchingRetailersByName(double lat, double lng, String name, Integer limit) {
 		Collection<ScoredDocument> results = getMatchingRetailerDocs(lat, lng, name, limit);
 		if (log.isLoggable(Level.FINE))
 			log.fine("Search results size: " + results.size());
-		List<Retailer> list = null;//null for no duplicates
+		List<Business> list = null;//null for no duplicates
 		if(results != null && !results.isEmpty()) {
-			list = new ArrayList<Retailer>();
+			list = new ArrayList<Business>();
 			if (results != null && results.size() > 0) {
 				for (ScoredDocument sd : results) {
 					if (log.isLoggable(Level.FINER))
 						log.finer("Duplicate Search result ID: " + sd.getId());
 					try {
-						Retailer d = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
+						Business d = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
 						list .add(d);
 					} catch (NotFoundException e) {
 						log.logp(Level.WARNING, RetailerSearch.class.getName(), "searchRetailers", "Bad retailer ID from search results. Ignoring. ", e);

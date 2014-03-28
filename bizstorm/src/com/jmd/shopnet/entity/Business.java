@@ -6,12 +6,11 @@ import java.util.List;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.datastore.Category;
-import com.google.appengine.api.datastore.Email;
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.PhoneNumber;
-import com.google.appengine.api.datastore.PostalAddress;
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -19,12 +18,16 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.OnLoad;
 import com.googlecode.objectify.annotation.OnSave;
+import com.googlecode.objectify.annotation.Parent;
 import com.googlecode.objectify.condition.IfTrue;
 import com.jmd.shopnet.utils.StringConversions;
 
 @Entity
 @Cache
-public class Retailer {
+public class Business {
+	@Parent
+	private Key<Customer> customer;
+	
 	@Id
 	private Long id;
 
@@ -35,9 +38,10 @@ public class Retailer {
 	private String specialOfferings;
 
 	@Index
-	private List<Category> categories;
+	private Category businessType;	
+
 	@Index
-	private List<Category> subCategories;
+	private List<Category> categories;
 	@Index
 	private List<Category> brands;
 	@Index
@@ -64,47 +68,30 @@ public class Retailer {
 	@IgnoreSave
 	private Float lng;
 	private GeoPt geoPt;
-	private PostalAddress postalAddress;
-	private String city;
+	private Address postalAddress;
 	private Country country;
-	private String zip;
-	private String locality;
-	private List<Email> emails;
+
 
 	private Link coverPicture;
-	private List<Link> retailerPictures;
-	private List<Link> customerPictures;
+
 	@Index
 	private List<PhoneNumber> smsNumbers;
-	private List<PhoneNumber> phoneNumbers;
+	private List<PhoneNumber> contactNumbers;
 	private Link website;
 	private String contactName;
-	private List<PhoneNumber> contactPhones;
 
-	private boolean crowdSourced;
-	@Index
-	private User partnerLogin;
 	private Date joiningDate;
+	
 	@Index(IfTrue.class)
 	private Boolean active = true;
-	private Boolean partner = true;
 	private boolean approved = false;
-	@Index
-    private String addedByEmail;
 	private User reviwedBy;
 	private User addedBy;
 	private Float editorRating;
 	private Float avgUserRating;
 	private List<PaymentMode> paymentModes;
 
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	public String getPhoneCsv() {
-		return StringConversions.formCsvFromPhones(this.phoneNumbers);
-	}
-
-	public void setPhoneCsv(String csv) {
-		this.phoneNumbers = StringConversions.extractPhonesFromCsv(csv);
-	}
+	
 
 	/** 
 	 * Set country before setting sms numbers
@@ -115,11 +102,11 @@ public class Retailer {
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getContactPhoneCsv() {
-		return StringConversions.formCsvFromPhones(this.contactPhones);
+		return StringConversions.formCsvFromPhones(this.contactNumbers);
 	}
 
 	public void setContactPhoneCsv(String phone) {
-		this.contactPhones = StringConversions.extractPhonesFromCsv(phone);
+		this.contactNumbers = StringConversions.extractPhonesFromCsv(phone);
 	}
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
@@ -131,15 +118,6 @@ public class Retailer {
 		this.categories = StringConversions.extractCategoriesFromCsv(tags);
 	}
 
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	public String getSubCategoryTags() {
-		return StringConversions.formCsvFromCategories(this.subCategories);
-	}
-
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	public void setSubCategoryTags(String tags) {
-		this.subCategories = StringConversions.extractCategoriesFromCsv(tags);
-	}
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getBrandTags() {
@@ -177,24 +155,7 @@ public class Retailer {
 		this.serviceTypes = StringConversions.extractCategoriesFromCsv(tags);
 	}
 
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	public String getEmailCsv() {
-		return StringConversions.formCsvFromEmails(this.emails);
-	}
-
-	public void setEmailCsv(String emailCsv) {
-		this.emails = StringConversions.extractEmailsFromCsv(emailCsv);
-	}
-
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	public String getRetailerPicturesCsv() {
-		return StringConversions.formCsvFromLinks(this.retailerPictures);
-	}
-
-	public void setRetailerPicturesCsv(String pictureUrlCsv) {
-		this.retailerPictures = StringConversions.extractLinksFromCsv(pictureUrlCsv);
-	}
-
+	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getPaymentModeCsv() {
 		return StringConversions.formCsvFromPaymentModes(this.paymentModes);
@@ -298,40 +259,15 @@ public class Retailer {
 		this.details = details;
 	}
 
-	public PostalAddress getPostalAddress() {
+	public Address getPostalAddress() {
 		return this.postalAddress;
 	}
 
-	public void setPostalAddress(PostalAddress address) {
+	public void setPostalAddress(Address address) {
 		this.postalAddress = address;
 	}
-
-	public String getAddress() {
-		if (this.postalAddress == null)
-			return null;
-		return this.postalAddress.getAddress();
-	}
-
-	public void setAddress(String address) {
-		this.postalAddress = new PostalAddress(address);
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getZip() {
-		return this.zip;
-	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
-
+	
+	
 	public Country getCountry() {
 		return this.country;
 	}
@@ -340,13 +276,6 @@ public class Retailer {
 		this.country = country;
 	}
 
-	public String getLocality() {
-		return this.locality;
-	}
-
-	public void setLocality(String locality) {
-		this.locality = locality;
-	}
 
 	public String getOwner() {
 		return this.owner;
@@ -372,14 +301,7 @@ public class Retailer {
 		this.categories = categories;
 	}
 
-	public List<Category> getSubCategories() {
-		return subCategories;
-	}
-
-	public void setSubCategories(List<Category> subCategories) {
-		this.subCategories = subCategories;
-	}
-
+	
 	public List<Category> getBrands() {
 		return brands;
 	}
@@ -428,14 +350,7 @@ public class Retailer {
 		this.joiningDate = joiningDate;
 	}
 
-	public List<PhoneNumber> getPhoneNumbers() {
-		return phoneNumbers;
-	}
-
-	public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
-		this.phoneNumbers = phoneNumbers;
-	}
-
+	
 	public List<PhoneNumber> getSmsNumbers() {
 		return smsNumbers;
 	}
@@ -445,7 +360,7 @@ public class Retailer {
 	}
 
 	public List<String> getDerivedSmsNumbers() {
-		return StringConversions.deriveComparableSmsNumbers(phoneNumbers, this.country);
+		return StringConversions.deriveComparableSmsNumbers(contactNumbers, this.country);
 	}
 
 	public String getWebsiteUrl() {
@@ -474,30 +389,7 @@ public class Retailer {
 		this.contactName = contactName;
 	}
 
-	public List<PhoneNumber> getContactPhones() {
-		return contactPhones;
-	}
-
-	public void setContactPhones(List<PhoneNumber> contactPhones) {
-		this.contactPhones = contactPhones;
-	}
-
-	public List<Email> getEmails() {
-		return emails;
-	}
-
-	public void setEmails(List<Email> emails) {
-		this.emails = emails;
-	}
-
-	public List<Link> getRetailerPictures() {
-		return retailerPictures;
-	}
-
-	public void setRetailerPictures(List<Link> retailerPictures) {
-		this.retailerPictures = retailerPictures;
-	}
-
+	
 	public Link getCoverPicture() {
 		return coverPicture;
 	}
@@ -505,31 +397,7 @@ public class Retailer {
 	public void setCoverPicture(Link coverPicture) {
 		this.coverPicture = coverPicture;
 	}
-
-	public List<Link> getCustomerPictures() {
-		return customerPictures;
-	}
-
-	public void setCustomerPictures(List<Link> customerPictures) {
-		this.customerPictures = customerPictures;
-	}
-
-	public boolean isCrowdSourced() {
-		return crowdSourced;
-	}
-
-	public void setCrowdSourced(boolean crowdSourced) {
-		this.crowdSourced = crowdSourced;
-	}
-
-	public User getPartnerLogin() {
-		return partnerLogin;
-	}
-
-	public void setPartnerLogin(User partnerLogin) {
-		this.partnerLogin = partnerLogin;
-	}
-
+	
 	public boolean isApproved() {
 		return approved;
 	}
@@ -578,13 +446,6 @@ public class Retailer {
 		this.addedBy = addedBy;
 	}
 
-	public String getAddedByEmail() {
-		return addedByEmail;
-	}
-	public void setAddedByEmail(String addedByEmail) {
-		this.addedByEmail = addedByEmail;
-	}
-
 	public String getHoursOfOperation() {
 		return hoursOfOperation;
 	}
@@ -593,23 +454,12 @@ public class Retailer {
 		this.hoursOfOperation = hoursOfOperation;
 	}
 
-	public Boolean getPartner() {
-		return partner;
+	public Category getBusinessType() {
+		return businessType;
 	}
 
-	public void setPartner(Boolean partner) {
-		this.partner = partner;
+	public void setBusinessType(Category businessType) {
+		this.businessType = businessType;
 	}
 
-	@Override
-	public String toString() {
-		return "Retailer [id=" + id + ", name=" + name + ", details=" + details + ", owner=" + owner + ", categories=" + categories
-				+ ", subCategories=" + subCategories + ", brands=" + brands + ", lat=" + lat + ", lng=" + lng + ", geoPt=" + geoPt
-				+ ", postalAddress=" + postalAddress + ", city=" + city + ", country=" + country + ", zip=" + zip + ", emails=" + emails
-				+ ", coverPicture=" + coverPicture + ", retailerPictures=" + retailerPictures + ", customererPictures=" + customerPictures
-				+ ", smsNumbers=" + smsNumbers + ", phoneNumbers=" + phoneNumbers + ", website=" + website + ", contactName=" + contactName
-				+ ", contactPhones=" + contactPhones + ", crowdSourced=" + crowdSourced + ", partnerLogin=" + partnerLogin 
-				+ ", joiningDate=" + joiningDate + ", active=" + active + ", partner=" + partner + ", approved=" + approved + ", reviwedBy=" + reviwedBy + ", addedBy=" + addedBy 
-				+ ", editorRating=" + editorRating + ", avgUserRating=" + avgUserRating + ", paymentModes=" + paymentModes + "]";
-	}
 }

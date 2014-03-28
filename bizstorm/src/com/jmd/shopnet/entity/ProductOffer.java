@@ -1,5 +1,7 @@
 package com.jmd.shopnet.entity;
 
+import java.util.List;
+
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -10,29 +12,37 @@ import com.googlecode.objectify.annotation.Parent;
 public class ProductOffer {
 
 	@Parent
-    private Key<Retailer> retailerKey;
+	private Key<Business> businessKey;
 
 	@Id
-    private Long id;
+	private Long id;
 
 	@Index
-    private Key<Product> productKey;
+	private Key<Product> productKey;
 
-    @Index
-    private float price;
+	@Index
+	private float price;
 
-    private int currentStock;
+	private int quantity;
 
-    private String retailerMessage;
+	@Index
+	private String offerType;
 
-    private int customerRatingAvg;
+	private String retailerMessage;
 
-	public Key<Retailer> getRetailerKey() {
-		return retailerKey;
+	private int customerRatingAvg;
+	
+	private int blacklistedCount;
+	
+	private List<CustomerComments> customerComments;
+
+	
+	public Key<Business> getBusinessKey() {
+		return businessKey;
 	}
 
-	public void setRetailerKey(Key<Retailer> retailerKey) {
-		this.retailerKey = retailerKey;
+	public void setBusinessKey(Key<Business> retailerKey) {
+		this.businessKey = retailerKey;
 	}
 
 	public Key<Product> getProductKey() {
@@ -44,43 +54,64 @@ public class ProductOffer {
 	}
 
 	public float getPrice() {
-        return this.price;
-    }
+		return this.price;
+	}
 
 	public void setPrice(float price) {
-        this.price = price;
-    }
+		this.price = price;
+	}
 
 	public int getCurrentStock() {
-        return this.currentStock;
-    }
+		return this.quantity;
+	}
 
 	public void setCurrentStock(int currentStock) {
-        this.currentStock = currentStock;
-    }
+		this.quantity = currentStock;
+	}
 
 	public String getRetailerMessage() {
-        return this.retailerMessage;
-    }
+		return this.retailerMessage;
+	}
 
 	public void setRetailerMessage(String retailerMessage) {
-        this.retailerMessage = retailerMessage;
-    }
+		this.retailerMessage = retailerMessage;
+	}
 
 	public int getCustomerRatingAvg() {
-        return this.customerRatingAvg;
-    }
+		return this.customerRatingAvg;
+	}
 
 	public void setCustomerRatingAvg(int customerRatingAvg) {
-        this.customerRatingAvg = customerRatingAvg;
-    }
+		this.customerRatingAvg = customerRatingAvg;
+	}
 
 	public Long getId() {
-        return this.id;
-    }
+		return this.id;
+	}
 
 	public void setId(Long id) {
-        this.id = id;
-    }
+		this.id = id;
+	}
 
+	public String getOfferType() {
+		return offerType;
+	}
+
+	public void setOfferType(String offerType) {
+		this.offerType = offerType;
+	}
+	public int getBlacklistedCount() {
+		return blacklistedCount;
+	}
+
+	public void setBlacklistedCount(int blacklistedCount) {
+		this.blacklistedCount = blacklistedCount;
+	}
+	public List<CustomerComments> getCustomerComments() {
+		return customerComments;
+	}
+
+	public void setCustomerComments(List<CustomerComments> customerComments) {
+		this.customerComments = customerComments;
+	}
 }

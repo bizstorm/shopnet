@@ -10,7 +10,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.jmd.shopnet.entity.Customer;
 import com.jmd.shopnet.entity.Product;
 import com.jmd.shopnet.entity.ProductOffer;
-import com.jmd.shopnet.entity.Retailer;
+import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.Bookmark;
 
 
@@ -26,7 +26,7 @@ public class OfyFactory extends ObjectifyFactory
 	public OfyFactory() {
 		long time = System.currentTimeMillis();
 
-		this.register(Retailer.class);
+		this.register(Business.class);
 		this.register(Customer.class);
 		this.register(Product.class);
 		this.register(ProductOffer.class);

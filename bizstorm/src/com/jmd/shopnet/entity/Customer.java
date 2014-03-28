@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnLoad;
 import com.googlecode.objectify.annotation.OnSave;
 
@@ -19,20 +21,28 @@ public class Customer {
 	}
 	@Id
     private Long id;
+	
+	/********** User Identity *********/
+	@Index
+    private User user;
+	private String federationId;
+	private String federationProvider;
+	
 	/********** My Profile *********/
 
 	@Index
 	private String name;
 	@Index
-	private String fbId;
-	@Index
-    private String email;
+    private String email;	
 	@Index
     private String phoneCode;
 	@Index
     private String phoneNumber;
+
+	
+	/********** FB Profile *********/
 	@Index
-	private String dob;	
+	private String fbId;
 	private String fbEmail;	
 	private String fbPictureURL;	
 		
@@ -40,9 +50,17 @@ public class Customer {
 	private Long socialCoin;
 	private String pictureLogin;
 	private String pictureUpload;
-	private List<Friend> friends = new ArrayList<>();
-	private List<Address> addresses = new ArrayList<>();	
-	private List<Customer> group;	
+	
+	private List<Address> addresses = new ArrayList<>();		
+	
+	/********** My Group *********/
+	@Load
+	private List<Ref<BusinessGroup>> businessGroups;
+	
+	@Load
+	private List<Ref<Business>> business;
+	
+	
 	
 	/********** My Location *********/
 
@@ -50,6 +68,7 @@ public class Customer {
     private Float lat;
     @IgnoreSave
     private Float lng;
+    
     private GeoPt geoPt;
 
 	/********** My Offers *********/
@@ -69,10 +88,7 @@ public class Customer {
 	/********** My Donations *********/
 
 	/********** User Identity *********/
-	@Index
-    private User user;
-	private String federationId;
-	private String federationProvider;
+	
 
 	public Long getId() {
         return this.id;
@@ -114,15 +130,50 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
-	public String getDOB() {
-        return this.dob;
-    }
 
-	public void setDOB(String dob) {
-        this.dob = dob;
-    }
+	public List<Address> getAddresses() {
+		return addresses;
+	}
 
+	public void setAddresses(List<Address> addresses) 
+	{
+		this.addresses = addresses;
+	}
+
+	public List<Ref<BusinessGroup>> getBusinessGroup() {
+		return businessGroups;
+	}
+
+	public void setBusinessGroup(List<Ref<BusinessGroup>> businessGroups) {
+		
+		this.businessGroups = businessGroups;
+	}
 	
+	public List<BusinessGroup> getAllBizGroups() {
+		List<BusinessGroup> groups = new ArrayList<>();
+		if(groups != null){
+			for (Ref<BusinessGroup> bizGroup : businessGroups) {
+				groups.add(bizGroup.get());
+			}
+		}
+		return groups;
+	}
+	
+	public void addGroupMember(BusinessGroup businessGroup) {
+		if(businessGroup != null && businessGroups != null){
+			businessGroups.add(Ref.create(businessGroup));
+		}
+	}
+	
+	public void removeGroupMember(BusinessGroup businessGroup) {
+		if(businessGroup != null && businessGroups != null){
+			businessGroups.remove(Ref.create(businessGroup));
+		}
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
 
 	public String getCountry() {
@@ -254,14 +305,6 @@ public class Customer {
 		this.fbId = fbId;
 	}
 	
-	public List<Friend> getFriends() {
-		return friends;
-	}
-
-	public void setFriends(List<Friend> friends) {
-		this.friends = friends;
-	}
-	
 	public String getFbEmail() {
 		return fbEmail;
 	}
@@ -276,5 +319,12 @@ public class Customer {
 
 	public void setFbPictureURL(String fbPictureURL) {
 		this.fbPictureURL = fbPictureURL;
+	}
+	public List<Ref<Business>> getBusiness() {
+		return business;
+	}
+
+	public void setBusiness(List<Ref<Business>> business) {
+		this.business = business;
 	}
 }
