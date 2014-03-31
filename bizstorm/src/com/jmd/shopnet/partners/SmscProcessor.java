@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.jmd.shopnet.dao.RetailerOfy;
+import com.jmd.shopnet.dao.BusinessDAO;
 import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.Country;
 import com.jmd.shopnet.entity.SmsRequest;
@@ -38,7 +38,7 @@ public class SmscProcessor {
 	public static final String SMSC_ERROR_SMS_PART3 = " has ";
 	public static final String SMSC_ERROR_SMS_PART4 = ". Please correct and re-send or contact customer care at ";
 
-	private RetailerOfy retailerOfy;
+	private BusinessDAO retailerOfy;
 	private SmscSender smscSender;
 	private String supportPhone;
 
@@ -197,9 +197,9 @@ public class SmscProcessor {
 	private List<Business> findRetailersBySmsNumber(String smsNumber) {
 		if(smsNumber == null || smsNumber.isEmpty())
 			return null;
-		List<Business> retailers = retailerOfy.fetchBySmsNumbers(smsNumber);
+		List<Business> retailers = retailerOfy.getBySmsNumbers(smsNumber);
 		if(retailers == null || retailers.isEmpty()) {
-			retailers = retailerOfy.fetchByPhoneNumbers(smsNumber);
+			retailers = retailerOfy.getByPhoneNumbers(smsNumber);
 			if(retailers == null || retailers.isEmpty()) {
 				return null;
 			}
@@ -228,12 +228,12 @@ public class SmscProcessor {
 		this.supportPhone = supportPhone;
 	}
 
-	public RetailerOfy getRetailerOfy() {
+	public BusinessDAO getRetailerOfy() {
 		return retailerOfy;
 	}
 
 	@Inject
-	public void setRetailerOfy(RetailerOfy retailerOfy) {
+	public void setRetailerOfy(BusinessDAO retailerOfy) {
 		this.retailerOfy = retailerOfy;
 	}
 

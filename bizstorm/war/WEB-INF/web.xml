@@ -33,7 +33,7 @@
 	  <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
 	  <init-param>
 	   <param-name>services</param-name>
-	   <param-value>com.jmd.shopnet.api.SellerAPI</param-value>
+	   <param-value>com.jmd.shopnet.api.CustomerAPI,com.jmd.shopnet.api.OfferAPI</param-value>
 	  </init-param>
 	 </servlet>
 	 

@@ -81,6 +81,26 @@ public class StringConversions {
 		}
 	}
 
+	
+	/**
+	 * Split by comma and make lower-case before making 
+	 */
+	public static List<Category> extractCategoriesFromList(List<String> categories) {
+		if(categories == null || categories.size()== 0)
+			return null;
+		else {
+			List<Category> list = new ArrayList<Category>();
+			for (String category : categories) {
+				if(!category.trim().isEmpty())
+					list.add(new Category(category.trim()));
+			}			
+			if(!list.isEmpty())
+				return list;
+			else 
+				return null;
+		}
+	}
+
 	public static List<PhoneNumber> extractPhonesFromCsv(String phone) {
 		if(phone == null || phone.isEmpty())
 			return  null;
@@ -322,12 +342,12 @@ public class StringConversions {
 
 	public static String deriveComparableSmsNumber(String smsNumber, Country country) {
 		smsNumber = extractNumerics(smsNumber);
-		Integer mobileLength = Consts.MOBILE_NUMBER_LENGTHS.get(country);
-		String countryCode = Consts.COUNTRY_CODES.get(country);
+		Integer mobileLength = JMDConstants.MOBILE_NUMBER_LENGTHS.get(country);
+		String countryCode = JMDConstants.COUNTRY_CODES.get(country);
 		if(mobileLength == null)
-			mobileLength = Consts.MOBILE_NUMBER_LENGTHS.get(Country.India);//TODO remove Assumption of India
+			mobileLength = JMDConstants.MOBILE_NUMBER_LENGTHS.get(Country.India);//TODO remove Assumption of India
 		if(countryCode == null)
-			countryCode = Consts.COUNTRY_CODES.get(Country.India);//TODO remove Assumption of India
+			countryCode = JMDConstants.COUNTRY_CODES.get(Country.India);//TODO remove Assumption of India
 		if(smsNumber.isEmpty() || smsNumber.length() < mobileLength) {
 			return null;
 		} else if(smsNumber.length() == (mobileLength + countryCode.length())

@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-4.0rc2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/opencsv-2.4.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/lombok.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

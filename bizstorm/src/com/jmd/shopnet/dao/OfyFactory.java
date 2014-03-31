@@ -7,11 +7,13 @@ import javax.inject.Singleton;
 
 import com.google.inject.Injector;
 import com.googlecode.objectify.ObjectifyFactory;
+import com.jmd.shopnet.entity.Address;
+import com.jmd.shopnet.entity.Bookmark;
+import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.Customer;
+import com.jmd.shopnet.entity.OfferComments;
 import com.jmd.shopnet.entity.Product;
 import com.jmd.shopnet.entity.ProductOffer;
-import com.jmd.shopnet.entity.Business;
-import com.jmd.shopnet.entity.Bookmark;
 
 
 
@@ -31,8 +33,8 @@ public class OfyFactory extends ObjectifyFactory
 		this.register(Product.class);
 		this.register(ProductOffer.class);
 		this.register(Bookmark.class);
-
-
+		this.register(Address.class);
+		this.register(OfferComments.class);
 		long millis = System.currentTimeMillis() - time;
 		log.info("Registration took " + millis + " millis");
 	}

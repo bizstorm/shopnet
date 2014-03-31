@@ -1,11 +1,15 @@
 package com.jmd.shopnet.entity;
 
+import lombok.Data;
+
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
+@Data
 @Entity
 public class Bookmark {
 
@@ -14,16 +18,6 @@ public class Bookmark {
 	
 	@Parent @Load
 	private Ref<Customer> customer;
-
-	
-	public Long getId() {
-        return this.id;
-    }
-
-	public void setId(Long id) {
-        this.id = id;
-    }
-
 
 	
 	public void setCustomer(Customer customer) {
@@ -38,8 +32,8 @@ public class Bookmark {
 		return this.customer.get();
 	}
 	
-	@Override
-	public String toString() {
-		return "Bookmark [id=" + id + ", customer=" + customer  + "]";
+	public Key<Bookmark> geyKey() {
+		return Key.create(customer.getKey(), Bookmark.class, id);
 	}
+
 }

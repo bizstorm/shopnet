@@ -15,6 +15,7 @@ import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.jmd.shopnet.entity.Business;
+import com.jmd.shopnet.entity.BusinessOwner;
 
 public class RetailerIndexer {
 	protected Logger log = Logger.getLogger(RetailerIndexer.class.getName());
@@ -38,9 +39,9 @@ public class RetailerIndexer {
 	 * Pushing collection in single async call
 	 * More efficient
 	 */
-	public boolean pushToIndex(Collection<Business> retailers) {
+	public boolean pushToIndex(Collection<BusinessOwner> businesses) {
 		List<Document> docs = new ArrayList<Document>();
-		for (Business retailer : retailers) {
+		for (BusinessOwner retailer : businesses) {
 			Document doc = builder(retailer).build();
 			log.info("Retailers search doc to add:\n" + doc);
 			docs.add(doc);
@@ -48,8 +49,8 @@ public class RetailerIndexer {
 		RETAILER_INDEX.putAsync(docs);
 		return true;
 	}
-	public String pushToIndex(Business retailer) {
-		Document doc = builder(retailer).build();
+	public String pushToIndex(BusinessOwner business) {
+		Document doc = builder(business).build();
 		log.info("Retailer search doc to add:\n" + doc);
 		try {
 			RETAILER_INDEX.putAsync(doc);
@@ -97,21 +98,21 @@ public class RetailerIndexer {
 		return pushToIndex(Arrays.asList(retailers));
 	}*/
 
-	protected Builder builder(Business retailer) {
-		Builder docBuilder = Document.newBuilder().setId(retailer.getId().toString())
-				.addField(Field.newBuilder().setName(RETAILER_NAME).setText(retailer.getName()))
-				.addField(Field.newBuilder().setName(RETAILER_DETAIL).setText(retailer.getDetails()))
-				.addField(Field.newBuilder().setName(RETAILER_GEO_POINT).setGeoPoint(new GeoPoint(retailer.getLat(), retailer.getLng())));
-		retailer.getCategories();
-		if(retailer.getCategories() != null && !retailer.getCategories().isEmpty())
-			for (Category c : retailer.getCategories()) {
+	protected Builder builder(BusinessOwner business) {
+		Builder docBuilder = Document.newBuilder().setId(business.getId().toString())
+				.addField(Field.newBuilder().setName(RETAILER_NAME).setText(business.getName()))
+				.addField(Field.newBuilder().setName(RETAILER_DETAIL).setText(business.getDetails()))
+				.addField(Field.newBuilder().setName(RETAILER_GEO_POINT).setGeoPoint(new GeoPoint(business.getLat(), business.getLng())));
+		business.getCategories();
+		if(business.getCategories() != null && !business.getCategories().isEmpty())
+			for (Category c : business.getCategories()) {
 				docBuilder.addField(Field.newBuilder().setName(RETAILER_CATEGORIES).setAtom(c.getCategory()));
 			}
-		if(retailer.getBusinessType() != null ) {
-				docBuilder.addField(Field.newBuilder().setName(RETAILER_BUSINESSTYPE).setAtom(retailer.getBusinessType().getCategory()));
+		if(business.getBusinessType() != null ) {
+				docBuilder.addField(Field.newBuilder().setName(RETAILER_BUSINESSTYPE).setAtom(business.getBusinessType().getCategory()));
 		}
-		if(retailer.getBrands() != null && !retailer.getBrands().isEmpty())
-			for (Category b : retailer.getBrands()) {
+		if(business.getBrands() != null && !business.getBrands().isEmpty())
+			for (Category b : business.getBrands()) {
 				docBuilder.addField(Field.newBuilder().setName(RETAILER_BRANDS).setAtom(b.getCategory()));
 			}
 		return docBuilder;

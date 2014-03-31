@@ -1,0 +1,337 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://shopkeeper-network.appspot.com/_ah/api",
+  "name" : "offers",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://shopkeeper-network.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "offers.offerAPI.setBusinessService" : {
+      "path" : "setBusinessService",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "272759068719.apps.googleusercontent.com", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.jmd.shopnet.api.OfferAPI.setBusinessService",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "offers.offerAPI.getOfferService" : {
+      "path" : "offerservice",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "272759068719.apps.googleusercontent.com", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.jmd.shopnet.api.OfferAPI.getOfferService",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "offers.offerAPI.setOfferService" : {
+      "path" : "setOfferService",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "272759068719.apps.googleusercontent.com", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.jmd.shopnet.api.OfferAPI.setOfferService",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "offers.offerAPI.setProductService" : {
+      "path" : "setProductService",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "272759068719.apps.googleusercontent.com", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.jmd.shopnet.api.OfferAPI.setProductService",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "offers.offer" : {
+      "path" : "offer/{ot}/{p}",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "272759068719.apps.googleusercontent.com", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.jmd.shopnet.api.OfferAPI.getBusinessOffers",
+      "request" : {
+        "parameters" : {
+          "ot" : {
+            "type" : "string",
+            "required" : true
+          },
+          "p" : {
+            "type" : "int32",
+            "required" : true
+          }
+        },
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "BusinessService" : {
+        "id" : "BusinessService",
+        "type" : "object",
+        "properties" : {
+          "customerDAO" : {
+            "$ref" : "CustomerDAO"
+          },
+          "businessDAO" : {
+            "$ref" : "BusinessDAO"
+          }
+        }
+      },
+      "CustomerDAO" : {
+        "id" : "CustomerDAO",
+        "type" : "object",
+        "properties" : {
+        }
+      },
+      "BusinessDAO" : {
+        "id" : "BusinessDAO",
+        "type" : "object",
+        "properties" : {
+        }
+      },
+      "OfferService" : {
+        "id" : "OfferService",
+        "type" : "object",
+        "properties" : {
+          "offerDAO" : {
+            "$ref" : "ProductOfferDAO"
+          }
+        }
+      },
+      "ProductOfferDAO" : {
+        "id" : "ProductOfferDAO",
+        "type" : "object",
+        "properties" : {
+        }
+      },
+      "ProductService" : {
+        "id" : "ProductService",
+        "type" : "object",
+        "properties" : {
+          "productDAO" : {
+            "$ref" : "ProductDAO"
+          }
+        }
+      },
+      "ProductDAO" : {
+        "id" : "ProductDAO",
+        "type" : "object",
+        "properties" : {
+        }
+      },
+      "OfferParams" : {
+        "id" : "OfferParams",
+        "type" : "object",
+        "properties" : {
+          "offerType" : {
+            "type" : "string"
+          },
+          "createdDate" : {
+            "$ref" : "DateRange"
+          },
+          "page" : {
+            "type" : "integer"
+          },
+          "orderby" : {
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "User"
+          },
+          "membersOnly" : {
+            "type" : "boolean"
+          },
+          "businessName" : {
+            "type" : "string"
+          },
+          "businessTypes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "lat" : {
+            "type" : "integer"
+          },
+          "lng" : {
+            "type" : "integer"
+          },
+          "distance" : {
+            "type" : "integer"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "industry" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "categoryTags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "brandTags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "productTags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "keywordTags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "price" : {
+            "$ref" : "NumericRange"
+          }
+        }
+      },
+      "DateRange" : {
+        "id" : "DateRange",
+        "type" : "object",
+        "properties" : {
+          "min" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "max" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "User" : {
+        "id" : "User",
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "authDomain" : {
+            "type" : "string"
+          },
+          "userId" : {
+            "type" : "string"
+          },
+          "federatedIdentity" : {
+            "type" : "string"
+          },
+          "nickname" : {
+            "type" : "string"
+          }
+        }
+      },
+      "NumericRange" : {
+        "id" : "NumericRange",
+        "type" : "object",
+        "properties" : {
+          "min" : {
+            "type" : "integer"
+          },
+          "max" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "JsonMap" : {
+        "id" : "JsonMap",
+        "type" : "object"
+      }
+    },
+    "methods" : {
+      "com.jmd.shopnet.api.OfferAPI.setBusinessService" : {
+        "request" : {
+          "$ref" : "BusinessService"
+        }
+      },
+      "com.jmd.shopnet.api.OfferAPI.getOfferService" : {
+        "response" : {
+          "$ref" : "OfferService"
+        }
+      },
+      "com.jmd.shopnet.api.OfferAPI.setOfferService" : {
+        "request" : {
+          "$ref" : "OfferService"
+        }
+      },
+      "com.jmd.shopnet.api.OfferAPI.setProductService" : {
+        "request" : {
+          "$ref" : "ProductService"
+        }
+      },
+      "com.jmd.shopnet.api.OfferAPI.getBusinessOffers" : {
+        "request" : {
+          "$ref" : "OfferParams"
+        },
+        "response" : {
+          "$ref" : "JsonMap"
+        }
+      }
+    }
+  }
+}

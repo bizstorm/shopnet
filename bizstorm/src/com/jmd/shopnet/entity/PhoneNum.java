@@ -1,6 +1,6 @@
 package com.jmd.shopnet.entity;
 
-import com.jmd.shopnet.utils.Consts;
+import com.jmd.shopnet.utils.JMDConstants;
 import com.jmd.shopnet.utils.StringConversions;
 
 public class PhoneNum {
@@ -35,7 +35,7 @@ public class PhoneNum {
 
 	public String getNumericWithCountryCode() {
 		if(isDirtyNumeric())
-			numericWithCountryCode = Consts.COUNTRY_CODES.get(country) + rawNumber;
+			numericWithCountryCode = JMDConstants.COUNTRY_CODES.get(country) + rawNumber;
 		return numericWithCountryCode;
 	}
 

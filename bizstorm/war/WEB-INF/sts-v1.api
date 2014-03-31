@@ -1,0 +1,34 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://shopkeeper-network.appspot.com/_ah/api",
+  "name" : "sts",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://shopkeeper-network.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+  },
+  "descriptor" : {
+    "schemas" : {
+    },
+    "methods" : {
+    }
+  }
+}

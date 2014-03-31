@@ -21,7 +21,7 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.googlecode.objectify.ObjectifyFilter;
-import com.jmd.shopnet.api.SellerAPI;
+import com.jmd.shopnet.api.CustomerAPI;
 import com.jmd.shopnet.dao.OfyFactory;
 
 public class WebContextListener extends GuiceServletContextListener {
@@ -34,7 +34,7 @@ public class WebContextListener extends GuiceServletContextListener {
 		    super.configureServlets();
 
 		    Set<Class<?>> serviceClasses = new HashSet<Class<?>>();
-		    serviceClasses.add(SellerAPI.class);
+		    serviceClasses.add(CustomerAPI.class);
 		    this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
 		  
 			Map<String, String> appstatsParams = Maps.newHashMap();

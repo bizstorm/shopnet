@@ -17,13 +17,13 @@ import com.google.appengine.api.search.SortOptions.Builder;
 import com.google.inject.Inject;
 import com.googlecode.objectify.NotFoundException;
 import com.jmd.shopnet.entity.Business;
-import com.jmd.shopnet.dao.RetailerOfy;
+import com.jmd.shopnet.dao.BusinessDAO;
 
 public class RetailerSearch {
 	private static final int DUPLICATE_CHECK_LIMIT = 10;
 	private static final String DUPLICATE_CHECK_RADIUS_COMPARISON = "<5000";
 	Logger log = Logger.getLogger(RetailerSearch.class.getName());
-	private RetailerOfy retailerOfy;
+	private BusinessDAO retailerOfy;
 
 	public List<Business> searchRetailers(double lat, double lng, Float radius, List<Category> categories, String sortKey, Integer limit, Integer offset) {
 		if (log.isLoggable(Level.FINE))
@@ -54,7 +54,7 @@ public class RetailerSearch {
 				if (log.isLoggable(Level.FINER))
 					log.finer("Search result ID: " + sd.getId());
 				try {
-					Business r = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
+					Business r = retailerOfy.getEntitySafe(Long.parseLong(sd.getId()));
 					retailers.add(r);
 				} catch (NotFoundException e) {
 					log.logp(Level.WARNING, RetailerSearch.class.getName(), "searchRetailers", "Bad retailer ID from search results. Ignoring. ", e);
@@ -84,7 +84,7 @@ public class RetailerSearch {
 				if (log.isLoggable(Level.FINER))
 					log.finer("Duplicate Search result ID: " + sd.getId());
 				try {
-					Business d = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
+					Business d = retailerOfy.getEntitySafe(Long.parseLong(sd.getId()));
 					/*if(d.getName().equalsIgnoreCase(r.getName())
 							&& d.getPostalAddress().equalsIgnoreCase(r.getPostalAddress())
 							) {
@@ -114,7 +114,7 @@ public class RetailerSearch {
 					if (log.isLoggable(Level.FINER))
 						log.finer("Duplicate Search result ID: " + sd.getId());
 					try {
-						Business d = retailerOfy.fetchRetailerSafe(Long.parseLong(sd.getId()));
+						Business d = retailerOfy.getEntitySafe(Long.parseLong(sd.getId()));
 						list .add(d);
 					} catch (NotFoundException e) {
 						log.logp(Level.WARNING, RetailerSearch.class.getName(), "searchRetailers", "Bad retailer ID from search results. Ignoring. ", e);
@@ -193,12 +193,12 @@ public class RetailerSearch {
 		return distanceExpression;
 	}
 
-	public RetailerOfy getRetailerOfy() {
+	public BusinessDAO getRetailerOfy() {
 		return retailerOfy;
 	}
 
 	@Inject
-	public void setRetailerOfy(RetailerOfy retailerOfy) {
+	public void setRetailerOfy(BusinessDAO retailerOfy) {
 		this.retailerOfy = retailerOfy;
 	}
 }
