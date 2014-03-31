@@ -8,10 +8,12 @@ import lombok.Data;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.datastore.Category;
+import com.google.appengine.api.datastore.Email;
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.datastore.Link;
 import com.google.appengine.api.datastore.PhoneNumber;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -20,6 +22,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.OnLoad;
 import com.googlecode.objectify.annotation.OnSave;
 import com.googlecode.objectify.annotation.Parent;
+import com.jmd.shopnet.utils.Enumerators.ACCESS;
 import com.jmd.shopnet.utils.StringConversions;
 
 @Data
@@ -30,15 +33,13 @@ public class Business {
 	private Key<Customer> customer;
 	
 	@Id
-	private Long id;
-
-	
+	private Long id;	
 	private String details;
 	private String owner;
-	private String access;
+	private ACCESS access;
 	
 	@Index
-	private String name;
+	private String businessName;
 	
 	@Index
 	private Category industry;	
@@ -71,6 +72,8 @@ public class Business {
 	@Index
 	private List<PhoneNumber> smsNumbers;
 	private List<PhoneNumber> contactNumbers;
+	@Index
+	private List<Email> emailids;
 	private Link website;
 	private String contactName;
 
@@ -171,7 +174,10 @@ public class Business {
 		}
 	}
 	
-	public Key<Business> geyKey() {
+	public Key<Business> getKey() {
 		return Key.create(customer, Business.class, id);
+	}
+	public Ref<Business> getRef() {
+		return Ref.create(getKey());
 	}
 }

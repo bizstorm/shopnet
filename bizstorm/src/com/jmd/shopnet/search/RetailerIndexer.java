@@ -100,7 +100,7 @@ public class RetailerIndexer {
 
 	protected Builder builder(BusinessOwner business) {
 		Builder docBuilder = Document.newBuilder().setId(business.getId().toString())
-				.addField(Field.newBuilder().setName(RETAILER_NAME).setText(business.getName()))
+				.addField(Field.newBuilder().setName(RETAILER_NAME).setText(business.getBusinessName()))
 				.addField(Field.newBuilder().setName(RETAILER_DETAIL).setText(business.getDetails()))
 				.addField(Field.newBuilder().setName(RETAILER_GEO_POINT).setGeoPoint(new GeoPoint(business.getLat(), business.getLng())));
 		business.getCategories();

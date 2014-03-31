@@ -5,6 +5,6 @@ import lombok.Setter;
 
 
 public class NumericRange {
-	@Setter @Getter private int min;
-	@Setter @Getter private int max;
+	@Setter @Getter private Integer min;
+	@Setter @Getter private Integer max;
 }

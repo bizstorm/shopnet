@@ -30,7 +30,10 @@ public class BusinessOwner extends Business {
 	private List<Product> catalogs;	
 	private List<Category> serviceTypes;
 	private List<PaymentMode> paymentModes;
+	
+	@Load
 	private List<Ref<Business>>  members;
+		
 	@Index
 	@Load
 	private List<Ref<ProductOffer>>  offers;

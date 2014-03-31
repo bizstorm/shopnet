@@ -6,14 +6,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import com.google.appengine.api.users.User;
+import com.googlecode.objectify.Ref;
+import com.jmd.shopnet.entity.Business;
+import com.jmd.shopnet.utils.Enumerators.ACCESS;
+import com.jmd.shopnet.utils.Enumerators.SCOPE;
 
 public class BusinessParams {
 	
 	// mandatory
 	//order (category, activity, distance)
 	@Setter @Getter private String orderby = "category";
+	@Setter @Getter private Integer limit;
+	@Setter @Getter private Integer offset;
 	
-	@Setter @Getter private String industry;
+	@Setter @Getter private List<String> industries;
 	@Setter @Getter private List<String> businessTypes;
 	
 	//optional
@@ -31,5 +37,10 @@ public class BusinessParams {
 	@Setter @Getter private Integer distance;
 	
 	@Setter @Getter private User user;
-	@Setter @Getter private Boolean membersOnly;
+	@Setter @Getter private List<Ref<Business>> keys;
+	@Setter @Getter private List<ACCESS> access;
+	@Setter @Getter private SCOPE scope;
+	
+	@Setter @Getter private String phoneNumber;
+	@Setter @Getter private String emailId;
 }

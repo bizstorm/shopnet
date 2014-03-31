@@ -76,7 +76,7 @@ public class RetailerSearch {
 	}
 
 	public Business getExactDuplicate(Business r) {
-		Collection<ScoredDocument> results = getMatchingRetailerDocs(r.getLat(), r.getLng(), r.getName(), DUPLICATE_CHECK_LIMIT);
+		Collection<ScoredDocument> results = getMatchingRetailerDocs(r.getLat(), r.getLng(), r.getBusinessName(), DUPLICATE_CHECK_LIMIT);
 		if (log.isLoggable(Level.FINE))
 			log.fine("Search results size: " + results.size());
 		if (results != null && results.size() > 0) {

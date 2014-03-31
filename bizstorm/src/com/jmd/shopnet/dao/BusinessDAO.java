@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.Category;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.cmd.Loader;
 import com.googlecode.objectify.cmd.Query;
 import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.Customer;
@@ -122,19 +122,52 @@ public class BusinessDAO {
 				.list();
 		return entities;
 	}
-
-	public List<Business> getBusinessByParams(List<Ref<Business>> businessList,
-			BusinessParams bParams) {
+	
+	public List<Business> getBusinessListByParams(BusinessParams params) {
 		List<Business> entities = null;
+		Query<Business> q = getBusinessQueryByParams(params);
+		entities = q.list();
+		return entities;
+	}
+	
+		
+	public List<Key<Business>> getBusinessKeysByParams(BusinessParams params) {
+		List<Key<Business>> entities = null;
+		Query<Business> q = getBusinessQueryByParams(params);
+		entities = q.keys().list();
+		return entities;
+	}
+	
+	public Map<Key<Business>, Business> loadKeysByParams(List<Key<Business>> keys, BusinessParams bParams) {
+		Map<Key<Business>, Business> entities  = null;;
+		Loader q = ofy().load();
+		if(bParams.getKeys() != null && bParams.getKeys().size() > 0){
+			q.filterKey("<>", bParams.getKeys());
+		}
+		if(bParams.getOffset() != null){
+			q.offset(bParams.getOffset());
+		}
+		if(bParams.getLimit() != null){
+			q.limit(bParams.getLimit());
+		}
+		entities  = q.keys(keys);
+		return entities;
+	}
+
+	public Query<Business> getBusinessQueryByParams(BusinessParams bParams) {
 		Query<Business> q = ofy().load().type(Business.class);
-		if(businessList != null && businessList.size() > 0){
-			q.filterKey(businessList);
-		}		
+		if(bParams.getKeys() != null && bParams.getKeys().size() > 0){
+			q.filterKey("in", bParams.getKeys());
+		}	
+		
 		if(bParams.getBusinessName() != null && bParams.getBusinessName().length() > 0){
 			q.filter("businessName", bParams.getBusinessName());
 		}
 		if(bParams.getBusinessTypes() != null && bParams.getBusinessTypes().size() > 0){
 			q.filter("businessType in", StringConversions.extractCategoriesFromList(bParams.getBusinessTypes()));
+		}
+		if(bParams.getIndustries() != null && bParams.getIndustries().size() > 0){
+			q.filter("industries in", StringConversions.extractCategoriesFromList(bParams.getIndustries()));
 		}
 		if(bParams.getCategoryTags() != null && bParams.getCategoryTags().size() > 0){
 			q.filter("categories in", StringConversions.extractCategoriesFromList(bParams.getCategoryTags()));
@@ -145,8 +178,11 @@ public class BusinessDAO {
 		if(bParams.getProductTags() != null && bParams.getProductTags().size() > 0){
 			q.filter("products in", StringConversions.extractCategoriesFromList(bParams.getProductTags()));
 		}
-		if(bParams.getProductTags() != null && bParams.getProductTags().size() > 0){
-			q.filter("products in", StringConversions.extractCategoriesFromList(bParams.getProductTags()));
+		if(bParams.getPhoneNumber() != null && bParams.getPhoneNumber().length() > 0){
+			q.filter("smsNumbers in", StringConversions.extractPhonesFromCsv(bParams.getPhoneNumber()));
+		}
+		if(bParams.getEmailId() != null && bParams.getEmailId().length() > 0){
+			q.filter("emailids in", StringConversions.extractEmailsFromCsv(bParams.getEmailId()));
 		}
 		if(bParams.getCity() != null && bParams.getCity().length() > 0){
 			q.filter("city", bParams.getCity());
@@ -154,11 +190,20 @@ public class BusinessDAO {
 		if(bParams.getCountry() != null && bParams.getCountry().length() > 0){
 			q.filter("country", bParams.getCountry());
 		}
-		
+		if(bParams.getAccess() != null && bParams.getAccess().size() > 0){
+			q.filter("access in", bParams.getAccess());
+		}		
 		if(bParams.getOrderby() != null && bParams.getOrderby().length() > 0){
 			q.order(bParams.getOrderby());
 		}
-		entities = q.list();
-		return entities;
+		if(bParams.getOffset() != null){
+			q.offset(bParams.getOffset());
+		}
+		if(bParams.getLimit() != null){
+			q.limit(bParams.getLimit());
+		}
+		return q;
 	}
+	
+	
 }

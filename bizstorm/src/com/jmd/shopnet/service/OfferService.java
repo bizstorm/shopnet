@@ -21,7 +21,7 @@ public class OfferService {
 	private ProductOfferDAO offerDAO;
 	
 	public List<ProductOffer> getOrderedProductOffers(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys, OfferParams oParams) {
-		List<ProductOffer> productOfferList = offerDAO.getOfferByParams(businessKeys, productKeys, oParams);
+		List<ProductOffer> productOfferList = offerDAO.getOfferListByParams(businessKeys, productKeys, oParams);
 		return productOfferList;
 	}
 	
@@ -39,7 +39,7 @@ public class OfferService {
 	public ProductParams getProductParams(OfferParams oParams) {
 		ProductParams pParams = new ProductParams();
 		pParams.setBrandTags(oParams.getBrandTags());
-		pParams.setIndustry(oParams.getIndustry());
+		pParams.setIndustries(oParams.getIndustries());
 		pParams.setCategoryTags(oParams.getCategoryTags());
 		pParams.setAttributeTags(oParams.getKeywordTags());
 		pParams.setNameTags(oParams.getProductTags());
@@ -61,7 +61,7 @@ public class OfferService {
 		bParams.setLat(oParams.getLat());
 		bParams.setLng(oParams.getLng());
 		bParams.setDistance(oParams.getDistance());
-		bParams.setMembersOnly(oParams.getMembersOnly());
+		bParams.setScope(oParams.getScope());
 		return bParams;
 	}
 	

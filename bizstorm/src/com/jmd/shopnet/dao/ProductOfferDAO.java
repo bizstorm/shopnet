@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.Loader;
+import com.googlecode.objectify.cmd.Query;
 import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.Product;
 import com.jmd.shopnet.entity.ProductOffer;
@@ -78,21 +80,91 @@ public class ProductOfferDAO {
 		return entitiesToDelete;
 	}
 	
-	public List<ProductOffer> getAllOffers(List<Key<Business>> members, List<Key<Product>> products,  String offerType, String orderBy,  Integer offset, Integer limit ) {
-		List<ProductOffer> entities = ofy().load().type(ProductOffer.class)
-				.filterKey("business in:", members)
-				.filterKey("product in:", products)
-				.filter("offerType", offerType)
-				.order(orderBy)
-				.offset(offset).limit(limit).list();
+
+	public List<ProductOffer> getOfferListByParams(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys,
+			OfferParams oParams) {
+		List<ProductOffer> entities = null;
+		Query<ProductOffer> q = getOfferQueryByParams(businessKeys, productKeys, oParams);
+		entities = q.list();
 		return entities;
 	}
-
-	public List<ProductOffer> getOfferByParams(
-			Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys,
+	
+		
+	public List<Key<ProductOffer>> getOfferKeysByParams(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys,
 			OfferParams oParams) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Key<ProductOffer>> entities = null;
+		Query<ProductOffer> q = getOfferQueryByParams(businessKeys, productKeys, oParams);
+		entities = q.keys().list();
+		return entities;
+	}
+	
+	public Map<Key<ProductOffer>, ProductOffer> loadKeysByParams(List<Key<ProductOffer>> keys, OfferParams oParams) {
+		Map<Key<ProductOffer>, ProductOffer> entities  = null;;
+		Loader q = ofy().load();
+	
+		if(oParams.getOffset() != null){
+			q.offset(oParams.getOffset());
+		}
+		if(oParams.getLimit() != null){
+			q.limit(oParams.getLimit());
+		}
+		entities  = q.keys(keys);
+		return entities;
+	}
+	
+	
+	public Query<ProductOffer> getOfferQueryByParams(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys,
+			OfferParams oParams) {
+		Query<ProductOffer> q = ofy().load().type(ProductOffer.class);
+		
+		if(businessKeys != null && businessKeys.size() > 0){
+			q.filterKey("business in",businessKeys);
+		}
+		if(productKeys != null && productKeys.size() > 0){
+			q.filterKey("product in",productKeys);
+		}
+		
+		if(oParams.getOfferType()!= null && oParams.getOfferType().length() > 0){
+			q.filter("offerType", oParams.getOfferType());
+		}
+		if(oParams.getPriceRange()!= null){
+			if(oParams.getPriceRange().getMin() != null){
+				q.filter("price >=", oParams.getPriceRange().getMin());
+			}
+			if(oParams.getPriceRange().getMax() != null){
+				q.filter("price <", oParams.getPriceRange().getMax());
+			}
+		}
+		
+		if(oParams.getCreatedDateRange()!= null){
+			if(oParams.getCreatedDateRange().getMin() != null){
+				q.filter("createdDate >=", oParams.getCreatedDateRange().getMin());
+			}
+			if(oParams.getCreatedDateRange().getMax() != null){
+				q.filter("createdDate <", oParams.getCreatedDateRange().getMax());
+			}
+		}
+		
+		if(oParams.getModifiedDateRange()!= null){
+			if(oParams.getModifiedDateRange().getMin() != null){
+				q.filter("modifiedDate >=", oParams.getModifiedDateRange().getMin());
+			}
+			if(oParams.getModifiedDateRange().getMax() != null){
+				q.filter("modifiedDate <", oParams.getModifiedDateRange().getMax());
+			}
+		}
+		
+		
+		if(oParams.getOrderby() != null && oParams.getOrderby().length() > 0){
+			q.order(oParams.getOrderby());
+		}
+		if(oParams.getOffset() != null){
+			q.offset(oParams.getOffset());
+		}
+		if(oParams.getLimit() != null){
+			q.limit(oParams.getLimit());
+		}
+		return q;
 	}
 	
 		

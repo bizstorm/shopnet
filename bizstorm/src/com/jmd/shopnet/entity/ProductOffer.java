@@ -10,6 +10,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
+import com.jmd.shopnet.utils.Enumerators.OFFERTYPE;
 
 @Data
 @Entity
@@ -30,7 +31,7 @@ public class ProductOffer {
 	private int quantity;
 
 	@Index
-	private String offerType;
+	private OFFERTYPE offerType;
 
 	private String message;
 

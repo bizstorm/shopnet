@@ -1,5 +1,6 @@
 package com.jmd.shopnet.entity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.Data;
@@ -28,6 +29,8 @@ public class Product {
     private Category brand;
     @Index
     private Category name;
+    @Index
+    private List<Category> keywords;
     
     private String defaultPictureUrl;
 
