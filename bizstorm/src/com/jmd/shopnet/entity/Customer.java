@@ -4,6 +4,8 @@ import java.util.List;
 
 import lombok.Data;
 
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
@@ -55,7 +57,24 @@ public class Customer {
 	@Load
 	private List<Ref<Business>> business;
 	
+	public List<Business> getBusiness(){
+		List<Business> biz= new ArrayList<>();
+		if(business != null){
+			for (Ref<Business> b : business) {
+				biz.add(b.get());
+			}
+		}		
+		return biz;
+	}
 	
+	public void setBusiness(List<Business> business) {
+		List<Ref<Business>> biz = new ArrayList<>();
+		if(business != null) {
+			for (Business b : business) {
+				biz.add(Ref.create(b));
+			}
+		} 
+	}
 	
 	/********** My Location *********/
 
@@ -128,6 +147,7 @@ public class Customer {
 		repopulateGeoPt();
 	}	
 	
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Key<Customer> geyKey() {
 		return Key.create(Customer.class, id);
 	}

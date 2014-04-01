@@ -1,8 +1,9 @@
 package com.jmd.shopnet.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.gwt.dev.util.collect.HashMap;
 import com.google.inject.Inject;
@@ -20,21 +21,32 @@ public class OfferService {
 	
 	private ProductOfferDAO offerDAO;
 	
-	public List<ProductOffer> getOrderedProductOffers(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys, OfferParams oParams) {
+	public List<ProductOffer> getOrderedProductOffersFromList(Collection<Business> businessList, Collection<Product> productList, OfferParams oParams) {
+		List<Key<Business>> businessKeys = new ArrayList<>(businessList.size());
+		for (Business business : businessList) {
+			businessKeys.add(business.getKey());
+		}
+		List<Key<Product>> productKeys = new ArrayList<>(productList.size());
+		for (Product product : productList) {
+			productKeys.add(product.getKey());
+		}
 		List<ProductOffer> productOfferList = offerDAO.getOfferListByParams(businessKeys, productKeys, oParams);
 		return productOfferList;
 	}
 	
-	public Map<Key<ProductOffer>, ProductOffer> getProductOffers(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys, OfferParams oParams) {
-		Map<Key<ProductOffer>, ProductOffer> productOffers = new HashMap<>();
+	public List<ProductOffer> getOrderedProductOffers(List<Key<Business>> businessKeys, List<Key<Product>> productKeys, OfferParams oParams) {
+		List<ProductOffer> productOfferList = offerDAO.getOfferListByParams(businessKeys, productKeys, oParams);
+		return productOfferList;
+	}
+	
+	public Map<Long, ProductOffer> getProductOffers(List<Key<Business>> businessKeys, List<Key<Product>> productKeys, OfferParams oParams) {
+		Map<Long, ProductOffer> productOffers = new HashMap<>();
 		List<ProductOffer> productOfferList = getOrderedProductOffers(businessKeys, productKeys, oParams);
 		for (ProductOffer productOffer : productOfferList) {
-			productOffers.put(productOffer.geyKey(), productOffer);
+			productOffers.put(productOffer.getId(), productOffer);
 		}
 		return productOffers;
 	}
-
-	
 
 	public ProductParams getProductParams(OfferParams oParams) {
 		ProductParams pParams = new ProductParams();
@@ -68,6 +80,19 @@ public class OfferService {
 	@Inject
 	public void setOfferDAO(ProductOfferDAO offerDAO) {
 		this.offerDAO = offerDAO;
+	}
+
+	public ProductOffer createOffer(ProductOffer productOffer) {
+		ProductOffer offer = null;
+		if(productOffer != null){
+			if(productOffer.getId() != null){
+				Key<ProductOffer> offerKey = offerDAO.saveEntity(productOffer);
+				if(offerKey != null){
+					offer = offerDAO.getEntity(offerKey.getId());
+				}
+			}
+		}
+		return offer;
 	}
 	
 }

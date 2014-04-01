@@ -22,10 +22,6 @@ public class ProductOffer {
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Key<Product> product;
 	
-	public Long getProduct(){
-		return product.getId();
-	}
-
 	@Id
 	private Long id;
 	
@@ -34,32 +30,54 @@ public class ProductOffer {
 	private Key<Business> business;
 
 	@Index
-	private float price;
+	private Float price;
 
-	private int quantity;
+	private Integer quantity;
 
 	@Index
 	private OFFERTYPE offerType;
 
 	private String message;
 
-	private int customerRatingAvg;
+	private Integer customerRatingAvg;
 	
-	private int blacklistedCount;
-	
-	@Index
-	private int access;
+	private Integer blacklistedCount;
 	
 	@Index
-	private Date createdDate;
+	private Integer access;
 	
-	private Date modifiedDate;
+	@Index
+	private Date createdOn;
+	
+	private Date modifiedOn;
+	
+	private Integer status=1;
 	
 	private List<OfferComments> comments;
 	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Key<ProductOffer> geyKey() {
 		return Key.create(product, ProductOffer.class, id);
+	}
+	
+	public Long getProductId(){
+		Long id = null;
+		if(product != null) id = product.getId();
+		return id;
+	}
+	
+	public void setProductId(Long id){		
+		if(id != null) product = Key.create(Product.class, id);
+	}
+	
+	public Long getBusinessId(){
+		Long id = null;
+		if(business != null) id = business.getId();
+		return id;
+	}
+	
+	public void setBusiness(Long id){		
+		if(id != null) business = Key.create(Business.class, id);
 	}
 
 }

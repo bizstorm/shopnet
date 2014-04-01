@@ -4,7 +4,6 @@ import static com.jmd.shopnet.dao.OfyService.ofy;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import com.googlecode.objectify.Key;
@@ -81,7 +80,7 @@ public class ProductOfferDAO {
 	}
 	
 
-	public List<ProductOffer> getOfferListByParams(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys,
+	public List<ProductOffer> getOfferListByParams(List<Key<Business>> businessKeys, List<Key<Product>> productKeys,
 			OfferParams oParams) {
 		List<ProductOffer> entities = null;
 		Query<ProductOffer> q = getOfferQueryByParams(businessKeys, productKeys, oParams);
@@ -90,7 +89,7 @@ public class ProductOfferDAO {
 	}
 	
 		
-	public List<Key<ProductOffer>> getOfferKeysByParams(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys,
+	public List<Key<ProductOffer>> getOfferKeysByParams(List<Key<Business>> businessKeys, List<Key<Product>> productKeys,
 			OfferParams oParams) {
 		List<Key<ProductOffer>> entities = null;
 		Query<ProductOffer> q = getOfferQueryByParams(businessKeys, productKeys, oParams);
@@ -113,7 +112,7 @@ public class ProductOfferDAO {
 	}
 	
 	
-	public Query<ProductOffer> getOfferQueryByParams(Set<Key<Business>> businessKeys, Set<Key<Product>> productKeys,
+	public Query<ProductOffer> getOfferQueryByParams(List<Key<Business>> businessKeys, List<Key<Product>> productKeys,
 			OfferParams oParams) {
 		Query<ProductOffer> q = ofy().load().type(ProductOffer.class);
 		
@@ -124,6 +123,9 @@ public class ProductOfferDAO {
 			q.filterKey("product in",productKeys);
 		}
 		
+		if(oParams.getAccess()!= null){
+			q.filter("access >=", oParams.getAccess());
+		}
 		if(oParams.getOfferType()!= null && oParams.getOfferType().length() > 0){
 			q.filter("offerType", oParams.getOfferType());
 		}
@@ -138,19 +140,19 @@ public class ProductOfferDAO {
 		
 		if(oParams.getCreatedDateRange()!= null){
 			if(oParams.getCreatedDateRange().getMin() != null){
-				q.filter("createdDate >=", oParams.getCreatedDateRange().getMin());
+				q.filter("createdOn >=", oParams.getCreatedDateRange().getMin());
 			}
 			if(oParams.getCreatedDateRange().getMax() != null){
-				q.filter("createdDate <", oParams.getCreatedDateRange().getMax());
+				q.filter("createdOn <", oParams.getCreatedDateRange().getMax());
 			}
 		}
 		
 		if(oParams.getModifiedDateRange()!= null){
 			if(oParams.getModifiedDateRange().getMin() != null){
-				q.filter("modifiedDate >=", oParams.getModifiedDateRange().getMin());
+				q.filter("modifiedOn >=", oParams.getModifiedDateRange().getMin());
 			}
 			if(oParams.getModifiedDateRange().getMax() != null){
-				q.filter("modifiedDate <", oParams.getModifiedDateRange().getMax());
+				q.filter("modifiedOn <", oParams.getModifiedDateRange().getMax());
 			}
 		}
 		

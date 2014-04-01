@@ -2,9 +2,11 @@ package com.jmd.shopnet.utils;
 
 public class Enumerators {
 	public enum ACCESS {
-		PUBLIC,
 		PRIVATE,
-		GROUP
+		GROUP,
+		PUBLIC,
+		
+		
 	};	
 	public enum SCOPE {
 		ALL,

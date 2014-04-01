@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import com.google.appengine.api.users.User;
+import com.jmd.shopnet.utils.Enumerators.ACCESS;
 import com.jmd.shopnet.utils.Enumerators.SCOPE;
 
 @Data
@@ -23,7 +24,7 @@ public class OfferParams {
 	@Setter @Getter private DateRange createdDateRange;
 	@Setter @Getter private DateRange modifiedDateRange;
 	@Setter @Getter private NumericRange priceRange;
-	
+	@Setter @Getter private ACCESS access = ACCESS.GROUP;
 	
 	// Customer params
 	@Setter @Getter private User user;

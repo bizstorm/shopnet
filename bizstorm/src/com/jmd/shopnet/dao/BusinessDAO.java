@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import com.google.appengine.api.datastore.Category;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Loader;
 import com.googlecode.objectify.cmd.Query;
 import com.jmd.shopnet.entity.Business;
@@ -153,7 +154,8 @@ public class BusinessDAO {
 		entities  = q.keys(keys);
 		return entities;
 	}
-
+	
+	
 	public Query<Business> getBusinessQueryByParams(BusinessParams bParams) {
 		Query<Business> q = ofy().load().type(Business.class);
 		if(bParams.getKeys() != null && bParams.getKeys().size() > 0){

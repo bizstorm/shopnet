@@ -32,11 +32,13 @@ public class BusinessOwner extends Business {
 	private List<PaymentMode> paymentModes;
 	
 	@Load
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private List<Ref<Business>>  members;
 		
-	@Index
+	/*@Index
 	@Load
-	private List<Ref<ProductOffer>>  offers;
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private List<Ref<ProductOffer>>  offers;*/
 
 	private String specialOfferings;
 	
@@ -48,7 +50,7 @@ public class BusinessOwner extends Business {
 	private User reviwedBy;
 	private User addedBy;
 	
-	public List<ProductOffer> getAllOffers() {
+	/*public List<ProductOffer> getAllOffers() {
 		List<ProductOffer> tempoffers = new ArrayList<>();
 		if(offers != null){
 			for (Ref<ProductOffer> offer : offers) {
@@ -68,11 +70,11 @@ public class BusinessOwner extends Business {
 		if(offer != null && offers != null){
 			offers.remove(Ref.create(offer));
 		}
-	}
+	}*/
 
 	
-	
-	public List<Business> getAllGroupMembers() {
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	public List<Business> getGroupMembers() {
 		List<Business> rmembers = new ArrayList<>();
 		if(members != null){
 			for (Ref<Business> member : members) {

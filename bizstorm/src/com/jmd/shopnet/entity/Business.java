@@ -30,6 +30,7 @@ import com.jmd.shopnet.utils.StringConversions;
 @Cache
 public class Business {
 	@Parent
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Key<Customer> customer;
 	
 	@Id
@@ -47,7 +48,7 @@ public class Business {
 	@Index
 	private Category businessType;	
 		
-	
+	private Integer status=1;
 	/**
 	 * lat - The latitude. Must be between -90 and 90 (inclusive). null
 	 * indicates no value set
@@ -174,10 +175,23 @@ public class Business {
 		}
 	}
 	
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Key<Business> getKey() {
 		return Key.create(customer, Business.class, id);
 	}
+	
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Ref<Business> getRef() {
 		return Ref.create(getKey());
+	}
+	
+	public Long getCustomerId(){
+		Long id = null;
+		if(customer != null) id = customer.getId();
+		return id;
+	}
+	
+	public void setCustomerId(Long id){		
+		if(id != null) customer = Key.create(Customer.class, id);
 	}
 }

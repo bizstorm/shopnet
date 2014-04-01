@@ -118,15 +118,26 @@ public class ProductDAO {
 	public Map<Key<Product>, Product> loadKeysByParams(List<Key<Product>> keys, ProductParams bParams) {
 		Map<Key<Product>, Product> entities  = null;;
 		Loader q = ofy().load();
-	
-		if(bParams.getOffset() != null){
-			q.offset(bParams.getOffset());
+		if(bParams != null){
+			if(bParams.getOffset() != null){
+				q.offset(bParams.getOffset());
+			}
+			if(bParams.getLimit() != null){
+				q.limit(bParams.getLimit());
+			}
 		}
-		if(bParams.getLimit() != null){
-			q.limit(bParams.getLimit());
-		}
+		
 		entities  = q.keys(keys);
 		return entities;
+	}
+	
+	public List<Product> getListByKeys(List<Key<Product>> keys) {
+		Map<Key<Product>, Product> result =  loadKeysByParams(keys,null);
+		if(result != null){
+			return (List) result.values();
+		}else{
+			return null;
+		}
 	}
 
 	public Query<Product> getProductQueryByParams(ProductParams params) {

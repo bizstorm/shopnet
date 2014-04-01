@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.dev.util.collect.HashMap;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
@@ -12,9 +13,11 @@ import com.jmd.shopnet.dao.CustomerDAO;
 import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.BusinessOwner;
 import com.jmd.shopnet.entity.Customer;
+import com.jmd.shopnet.entity.Product;
 import com.jmd.shopnet.utils.Enumerators.ACCESS;
 import com.jmd.shopnet.utils.Enumerators.SCOPE;
 import com.jmd.shopnet.vo.BusinessParams;
+import com.jmd.shopnet.vo.ProductParams;
 
 /**
  * @author subodhk
@@ -29,60 +32,76 @@ public class BusinessService {
 	 * @param bParams
 	 * @return Map<Key<Business>, Business>
 	 */
-	public Map<Key<Business>, Business> getBaseBusinesses(BusinessParams bParams) {
+	public Map<Long, Business> getBusinessMap(BusinessParams params) {
+		Map<Long, Business>  result = new HashMap<>();
+		List<Business>  list = getOrderedBusinessList(params) ;
+		for (Business business : list) {
+			result.put(business.getId(), business);
+		}		
+		return result;
+	}
+	public List<Key<Business>> getOrderedBusinesskeys(BusinessParams params) {
+		List<Key<Business>> keys = new ArrayList<>();
+		List<Business>  list = getOrderedBusinessList(params) ;
+		for (Business business : list) {
+			keys.add(business.getKey());
+		}
+		return keys;
+	}
+	
+	public List<Business> getOrderedBusinessList(BusinessParams params) {
 		List<Business> myBusinessList = null;
-		List<ACCESS> access = new ArrayList<>();
+		List<Business>  result = new ArrayList<>();
+		
+		List<ACCESS> access = new ArrayList<>();		
 		access.add(ACCESS.PUBLIC);
-		if (bParams.getUser() != null) { // logged in user
+		if (params.getUser() != null) { // logged in user
 			//TODO correct group access query
 			access.add(ACCESS.GROUP);
-			List<Customer> customers = customerDAO.getByUser(bParams.getUser());
+			List<Customer> customers = customerDAO.getByUser(params.getUser());
 			Customer customer = customers.get(0);
-			myBusinessList = businessDAO.getMyBusiness(customer.geyKey());
-			if (myBusinessList != null && SCOPE.GROUP.equals(bParams.getScope())) {
+			myBusinessList = customer.getBusiness();
+			if (myBusinessList != null && SCOPE.GROUP.equals(params.getScope())) {
 				List<Ref<Business>> businessFilter = new ArrayList<>();
 				for (Business business : myBusinessList) {
 					BusinessOwner owner = (BusinessOwner) business;
 					businessFilter.addAll(owner.getMembers());
 				}
-				bParams.setKeys(businessFilter);
-			}else if(myBusinessList != null && SCOPE.MINE.equals(bParams.getScope())){
+				params.setKeys(businessFilter);
+			}else if(myBusinessList != null && SCOPE.MINE.equals(params.getScope())){
 				List<Ref<Business>> businessFilter = new ArrayList<>();
 				for (Business business : myBusinessList) {
 					businessFilter.add(business.getRef());
 				}
-				bParams.setKeys(businessFilter);
+				params.setKeys(businessFilter);
 			}
-
 		}
 		
 		// GET All Business following the criteria
-		List<Key<Business>> businesskeys = businessDAO.getBusinessKeysByParams(bParams);
+		List<Business> businessList= businessDAO.getBusinessListByParams(params);
 
-		Map<Key<Business>, Business> result = businessDAO.loadKeysByParams(businesskeys, bParams);
 		
 		//TODO FIX group access related logic
 		// here we are removing business which have group access but not in currrent user's group
-		if(!SCOPE.MINE.equals(bParams.getScope())){
-			for (Map.Entry<Key<Business>, Business> businessEntry : result
-					.entrySet()) {
+		if(!SCOPE.MINE.equals(params.getScope())){
+			for (Business business: businessList) {
 				// Remove business which has group access and current customer is
 				// not in group
-				Business business = businessEntry.getValue();
 				if (myBusinessList != null && myBusinessList.size() > 0) {
 
 					for (Business temp : myBusinessList) {
 						if (business.getKey().equals(temp.getKey())) { // remove my business
-							result.remove(businessEntry.getKey());
 							continue;
 						}
 						if (ACCESS.GROUP.equals(business.getAccess())) {
 							BusinessOwner owner = (BusinessOwner) temp;
 							BusinessOwner current = (BusinessOwner) business;
-							if (!(owner.getMembers().contains(current) || current
+							if ((owner.getMembers().contains(current) && current
 									.getMembers().contains(owner))) {
-								result.remove(businessEntry.getKey());
+								result.add(business);
 							}
+						}else{
+							result.add(business);
 						}
 
 					}

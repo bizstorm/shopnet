@@ -5,6 +5,8 @@ import java.util.Map;
 
 import lombok.Data;
 
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.datastore.Category;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
@@ -33,11 +35,14 @@ public class Product {
     private List<Category> keywords;
     
     private String defaultPictureUrl;
+    
+    private Integer status=1;
 
     @EmbedMap
     private Map<String, String> attributes = new HashMap<String, String>();
 
-    public Key<Product> geyKey() {
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public Key<Product> getKey() {
 		return Key.create(Product.class, id);
 	}
 	

@@ -9,7 +9,6 @@ import com.google.api.server.spi.config.Named;
 import com.google.gwt.dev.util.collect.HashMap;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Entity;
 import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.Product;
 import com.jmd.shopnet.entity.ProductOffer;
@@ -46,12 +45,15 @@ public class OfferAPI {
 		try{
 			BusinessParams bParams = offerService.getBusinessParams(oParams);		
 			ProductParams pParams = offerService.getProductParams(oParams);		
-			Map<Key<Business>, Business> businessDetails = businessService.getBaseBusinesses(bParams);
-			Map<Key<Product>, Product> productDetails = productService.getProducts(pParams);
-			List<ProductOffer> productOffers = offerService.getOrderedProductOffers(businessDetails.keySet(), productDetails.keySet(), oParams);
+			Map<Long, Business>  businessMap = businessService.getBusinessMap(bParams);
+			Map<Long, Product> productMap = productService.getProductsMap(pParams);
+			
+			
+			List<ProductOffer> productOffers = offerService.getOrderedProductOffersFromList(businessMap.values(), productMap.values(), oParams);
 			resultMap.put("offers", productOffers);
-			resultMap.put("productDetails", productDetails);
-			resultMap.put("businessDetails", businessDetails);
+			
+			resultMap.put("productDetails", productMap);
+			resultMap.put("businessDetails", businessMap);
 		}catch (Exception e){
 			throw e;
 		}
@@ -59,17 +61,11 @@ public class OfferAPI {
 	}
 	
 	@ApiMethod(name="createoffer", httpMethod = "POST" , path="{ot}/new")
-	public ProductOffer createBusinessOffers(
+	public ProductOffer createBusinessOffer(
 				@Named("ot") String offerType, 				
 				ProductOffer productOffer) {
-		Map<String, Object> resultMap = new HashMap<>();
-		//oParams.setBusinessTypes(businessType);		
-		try{
-			
-		}catch (Exception e){
-			throw e;
-		}
-		return productOffer;
+		
+		return offerService.createOffer(productOffer);
 	}
 			
 

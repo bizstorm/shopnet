@@ -15,18 +15,29 @@ public class ProductService {
 	private ProductDAO productDAO;
 	
 	public List<Product> getOrderedProducts(ProductParams params) {
-		List<Product> productOfferList = productDAO.getProductListByParams(params);
-		return productOfferList;
+		List<Product> productList = productDAO.getProductListByParams(params);
+		return productList;
 	}
 	
-	public Map<Key<Product>, Product> getProducts(ProductParams params) {
-		Map<Key<Product>, Product> productOffers = new LinkedHashMap<>();
+	public List<Key<Product>> getOrderedProductkeys(ProductParams params) {
+		List<Key<Product>> productKeys = productDAO.getProductKeysByParams(params);
+		return productKeys;
+	}
+	
+	public List<Product> getOrderedProductFromkeys(List<Key<Product>> keys) {
+		List<Product> productKeys = productDAO.getListByKeys(keys);
+		return productKeys;
+	}
+	
+	public Map<Long, Product> getProductsMap(ProductParams params) {
+		Map<Long, Product> productOffers = new LinkedHashMap<>();
 		List<Product> productList = getOrderedProducts(params);
 		for (Product product : productList) {
-			productOffers.put(product.geyKey(), product);
+			productOffers.put(product.getId(), product);
 		}
 		return productOffers;
 	}
+	
 
 
 	@Inject
