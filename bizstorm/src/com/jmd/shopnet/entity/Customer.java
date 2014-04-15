@@ -68,11 +68,17 @@ public class Customer {
 	}
 	
 	public void setBusiness(List<Business> business) {
-		List<Ref<Business>> biz = new ArrayList<>();
+		this.business = new ArrayList<>();
 		if(business != null) {
 			for (Business b : business) {
-				biz.add(Ref.create(b));
+				this.business.add(Ref.create(b));
 			}
+		} 
+	}
+	
+	public void addBusiness(Business business) {
+		if(business != null) {
+			this.business.add(Ref.create(business));
 		} 
 	}
 	

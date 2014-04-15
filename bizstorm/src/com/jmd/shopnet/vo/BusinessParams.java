@@ -5,6 +5,8 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Ref;
 import com.jmd.shopnet.entity.Business;
@@ -37,6 +39,7 @@ public class BusinessParams {
 	@Setter @Getter private Integer distance;
 	
 	@Setter @Getter private User user;
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	@Setter @Getter private List<Ref<Business>> keys;
 	@Setter @Getter private List<ACCESS> access;
 	@Setter @Getter private SCOPE scope;

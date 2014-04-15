@@ -21,8 +21,13 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.googlecode.objectify.ObjectifyFilter;
+import com.jmd.shopnet.api.BusinessAPI;
 import com.jmd.shopnet.api.CustomerAPI;
+import com.jmd.shopnet.api.OfferAPI;
+import com.jmd.shopnet.api.ProductAPI;
 import com.jmd.shopnet.dao.OfyFactory;
+import com.jmd.shopnet.entity.Business;
+import com.jmd.shopnet.entity.Customer;
 
 public class WebContextListener extends GuiceServletContextListener {
 	Logger log = Logger.getLogger(WebContextListener.class.getName());
@@ -34,7 +39,10 @@ public class WebContextListener extends GuiceServletContextListener {
 		    super.configureServlets();
 
 		    Set<Class<?>> serviceClasses = new HashSet<Class<?>>();
+		    serviceClasses.add(OfferAPI.class);
+		    serviceClasses.add(ProductAPI.class);
 		    serviceClasses.add(CustomerAPI.class);
+		    serviceClasses.add(BusinessAPI.class);
 		    this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
 		  
 			Map<String, String> appstatsParams = Maps.newHashMap();
@@ -76,7 +84,7 @@ public class WebContextListener extends GuiceServletContextListener {
 			bind(SmscRecieverServlet.class).in(Singleton.class);
 
 			/* Jersey controller binding with @Path */
-			bind(Retailers.class);
+			//bind(Retailers.class);
 			//bind(SignIn.class);
 			//bind(TxnTest.class);
 

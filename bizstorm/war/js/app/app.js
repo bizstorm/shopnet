@@ -13,24 +13,24 @@ offerDashboard.config(function ($routeProvider){
 	});
 
 	$routeProvider.when('/home',{
-		controller : 'HomeController'
+		controller : 'HomeController',
 		templateUrl : 'partials/home.html'	
 	});
 
 	$routeProvider.otherwise({redirectTo: '/login'});
 });
 
-app.service('loginService', function($rootScope, $location) {
+offerDashboard.service('loginService', function($rootScope, $location) {
 	    this.auth = function (){
 	    	authenticate($rootScope, $location);
 	    };
 	});
 
-app.controller('LoginController', function ($scope,logginService){
+offerDashboard.controller('LoginController', function ($scope,logginService){
 	$scope.auth = logginService.auth();
 });
 
-app.controller('HomeController',function ($scope,$location){
+offerDashboard.controller('HomeController',function ($scope,$location){
 	if(!$scope.signed){
 		$location.path('/login');
 	}

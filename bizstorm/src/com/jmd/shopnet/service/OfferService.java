@@ -85,14 +85,32 @@ public class OfferService {
 	public ProductOffer createOffer(ProductOffer productOffer) {
 		ProductOffer offer = null;
 		if(productOffer != null){
-			if(productOffer.getId() != null){
 				Key<ProductOffer> offerKey = offerDAO.saveEntity(productOffer);
 				if(offerKey != null){
 					offer = offerDAO.getEntity(offerKey.getId());
 				}
-			}
 		}
 		return offer;
+	}
+
+	public boolean updateOffer(ProductOffer productOffer) {
+		Boolean updated = false;
+		if(productOffer != null){
+			if(productOffer.getId() != null){
+				Key<ProductOffer> offerKey = offerDAO.saveEntity(productOffer);
+				if(offerKey != null){
+					updated = true;
+				}
+			}
+		}
+		return updated;
+	}
+
+	public boolean deleteOffer(Long offerId) {
+		if(offerId != null){
+			offerDAO.deleteEntity(offerId);
+		}
+		return true;
 	}
 	
 }

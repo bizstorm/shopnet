@@ -13,11 +13,9 @@ import com.jmd.shopnet.dao.CustomerDAO;
 import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.BusinessOwner;
 import com.jmd.shopnet.entity.Customer;
-import com.jmd.shopnet.entity.Product;
 import com.jmd.shopnet.utils.Enumerators.ACCESS;
 import com.jmd.shopnet.utils.Enumerators.SCOPE;
 import com.jmd.shopnet.vo.BusinessParams;
-import com.jmd.shopnet.vo.ProductParams;
 
 /**
  * @author subodhk
@@ -107,9 +105,38 @@ public class BusinessService {
 					}
 				}
 			}
+		}else{
+			result = myBusinessList;
 		}
 		
 		return result;
+	}
+	
+	public void deleteBusiness(Long businessId) {
+		if(businessId != null){
+			businessDAO.deleteEntity(businessId);
+		}
+	}
+	public void updateBusiness(Business business) {
+		if(business != null){
+			if(business.getId() != null){
+				businessDAO.saveEntity(business);				
+			}
+		}
+	}
+	
+	public Business createBusiness(Business business) {
+		if(business != null){			
+			try{
+				Key<Business> businessKey = businessDAO.saveEntity(business);
+				if(businessKey != null){
+					business = businessDAO.getEntity(businessKey.getId());
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return business;
 	}
 
 	@Inject
@@ -121,5 +148,6 @@ public class BusinessService {
 	public void setBusinessDAO(BusinessDAO businessDAO) {
 		this.businessDAO = businessDAO;
 	}
+
 
 }

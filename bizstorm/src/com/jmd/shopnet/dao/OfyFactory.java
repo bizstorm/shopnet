@@ -10,6 +10,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.jmd.shopnet.entity.Address;
 import com.jmd.shopnet.entity.Bookmark;
 import com.jmd.shopnet.entity.Business;
+import com.jmd.shopnet.entity.BusinessOwner;
 import com.jmd.shopnet.entity.Customer;
 import com.jmd.shopnet.entity.OfferComments;
 import com.jmd.shopnet.entity.Product;
@@ -29,12 +30,13 @@ public class OfyFactory extends ObjectifyFactory
 		long time = System.currentTimeMillis();
 
 		this.register(Business.class);
+		this.register(BusinessOwner.class);
 		this.register(Customer.class);
 		this.register(Product.class);
 		this.register(ProductOffer.class);
 		this.register(Bookmark.class);
 		this.register(Address.class);
-		this.register(OfferComments.class);
+		//this.register(OfferComments.class);
 		long millis = System.currentTimeMillis() - time;
 		log.info("Registration took " + millis + " millis");
 	}

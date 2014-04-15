@@ -38,11 +38,45 @@ public class ProductService {
 		return productOffers;
 	}
 	
+	public Product createProduct(Product product) {
+		if(product != null){			
+				try{
+					Key<Product> productKey = productDAO.saveEntity(product);
+					if(productKey != null){
+						product = productDAO.getEntity(productKey.getId());
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+		}
+		return product;
+	}
 
+	public boolean updateProduct(Product product) {
+		Boolean updated = false;
+		if(product != null){
+			if(product.getId() != null){
+				Key<Product> productKey = productDAO.saveEntity(product);
+				if(productKey != null){
+					updated = true;
+				}
+			}
+		}
+		return updated;
+	}
+
+	public boolean deleteProduct(Long productId) {
+		if(productId != null){
+			productDAO.deleteEntity(productId);
+		}
+		return true;
+	}
+	
 
 	@Inject
 	public void setProductDAO(ProductDAO productDAO) {
 		this.productDAO = productDAO;
 	}
 
+	
 }

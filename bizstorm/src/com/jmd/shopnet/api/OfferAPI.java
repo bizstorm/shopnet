@@ -1,14 +1,16 @@
 package com.jmd.shopnet.api;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.api.server.spi.config.Named;
-import com.google.gwt.dev.util.collect.HashMap;
+import com.google.appengine.api.users.User;
 import com.google.inject.Inject;
-import com.googlecode.objectify.Key;
 import com.jmd.shopnet.entity.Business;
 import com.jmd.shopnet.entity.Product;
 import com.jmd.shopnet.entity.ProductOffer;
@@ -60,12 +62,25 @@ public class OfferAPI {
 		return resultMap;
 	}
 	
-	@ApiMethod(name="createoffer", httpMethod = "POST" , path="{ot}/new")
-	public ProductOffer createBusinessOffer(
-				@Named("ot") String offerType, 				
-				ProductOffer productOffer) {
+	@ApiMethod(name="createoffer", httpMethod = "POST" , path="new")
+	public ProductOffer createBusinessOffer(				
+			User user, ProductOffer productOffer) {
 		
 		return offerService.createOffer(productOffer);
+	}
+	
+	@ApiMethod(name="updateoffer", httpMethod = "POST" , path="update")
+	public void updateBusinessOffer(				
+				User user, ProductOffer productOffer) {
+		
+		offerService.updateOffer(productOffer);
+	}
+	
+	@ApiMethod(name="deleteoffer", httpMethod = "POST" , path="delete/{id}")
+	public void deleteBusinessOffer(				
+			User user ,@Named("id") Long offerId ) {
+		
+		 offerService.deleteOffer(offerId);
 	}
 			
 
@@ -75,11 +90,13 @@ public class OfferAPI {
 	}
 	
 	@Inject
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setBusinessService(BusinessService businessService) {
 		this.businessService = businessService;
 	}
 
 	@Inject
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setProductService(ProductService productService) {
 		this.productService = productService;
 	}
